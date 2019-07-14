@@ -1,10 +1,5 @@
 <template>
-    <div>
-        <van-nav-bar
-            left-text="返回"
-            left-arrow
-            :title="getAppName"
-        />
+    <div class="page-warp">
         <div class="app-contain">
             用户注册协议
         </div>
