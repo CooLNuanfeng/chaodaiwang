@@ -43,6 +43,15 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "uploadCard" */ './views/UploadCard.vue')
     },
     {
+      path: '/apply',
+      name: 'apply',
+      meta: {
+        title: '借款申请',
+        backText: '返回'
+      },
+      component: () => import(/* webpackChunkName: "apply" */ './views/Apply.vue')
+    },
+    {
       path: '/about',
       name: 'about',
       component: () => import(/* webpackChunkName: "about" */ './views/About.vue')

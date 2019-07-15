@@ -42,7 +42,6 @@
 <script>
 import {mapGetters} from 'vuex'
 import { 
-    NavBar, 
     CellGroup, 
     Field, 
     Divider, 
@@ -63,7 +62,6 @@ export default {
     },
     components: {
         [CellGroup.name]: CellGroup,
-        [NavBar.name]: NavBar,
         [Field.name]: Field,
         [Divider.name]: Divider,
         [Button.name]: Button,
