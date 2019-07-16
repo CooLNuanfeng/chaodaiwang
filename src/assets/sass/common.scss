@@ -2,6 +2,9 @@ html,body{
     height: 100%;
     background: #f6f6f6;
 }
+.red{
+    color: #f44;
+}
 .page-warp{
     padding-top: 60px;
 }
@@ -41,6 +44,7 @@ html,body{
     border-radius: 5px;
     background: #fff;
     color: #999;
+    overflow: hidden;
     div{
         width: 100% !important;
         height: 100% !important;
