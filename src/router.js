@@ -10,8 +10,11 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      // redirect: '/register',
+      redirect: '/login',
       name: 'home',
+      meta: {
+        title: '',
+      },
       component: Home
     },
     {
@@ -19,7 +22,7 @@ const router = new Router({
       name: 'login',
       meta: {
         title: '登录',
-        backText: '返回'
+        backText: ''
       },
       component: () => import(/* webpackChunkName: "login" */ './views/Login.vue')
     },
@@ -35,37 +38,48 @@ const router = new Router({
     {
       path: '/protocol',
       name: 'protocol',
+      meta: {
+        title: '用户协议',
+        backText: '返回'
+      },
       component: () => import(/* webpackChunkName: "protocol" */ './views/Protocol.vue')
     },
     {
       path: '/uploadCard',
       name: 'uploadCard',
+      meta: {
+        title: '身份证实名认证',
+        backText: '返回'
+      },
       component: () => import(/* webpackChunkName: "uploadCard" */ './views/UploadCard.vue')
     },
     {
-      path: '/apply',
-      name: 'apply',
+      path: '/createApply',
+      name: 'createApply',
       meta: {
         title: '借款申请',
         backText: '返回'
       },
-      component: () => import(/* webpackChunkName: "apply" */ './views/Apply.vue')
+      component: () => import(/* webpackChunkName: "createApply" */ './views/CreateApply.vue')
     },
     {
-      path: '/about',
-      name: 'about',
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+      path: '/stepStatus',
+      name: 'stepStatus',
+      meta: {
+        title: '认证进度',
+        backText: '返回'
+      },
+      component: () => import(/* webpackChunkName: "stepStatus" */ './views/StepStatus.vue')
     }
   ]
 })
 
 router.beforeEach((to, from, next) => {
   // console.log(to, from)
-  // console.log(Store)
   if(to.meta){
     Store.commit('setNavLeftText',to.meta.backText)
     Store.commit('setNavLeftArrow', to.meta.backText ? true: false)
-    Store.commit('setNavTitle', to.meta.title || Store.state.navTitle)
+    Store.commit('setNavTitle', to.meta.title || Store.state.appName)
   }
   next()
 })
