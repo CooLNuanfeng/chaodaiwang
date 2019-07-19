@@ -70,6 +70,42 @@ const router = new Router({
         backText: '返回'
       },
       component: () => import(/* webpackChunkName: "stepStatus" */ './views/StepStatus.vue')
+    },
+    {
+      path: '/infoList',
+      name: 'infoList',
+      meta: {
+        title: '完善信息',
+        backText: '返回'
+      },
+      component: () => import(/* webpackChunkName: "infoList" */ './views/InfoList.vue')
+    },
+    {
+      path: '/personal',
+      name: 'personal',
+      meta: {
+        title: '个人信息',
+        backText: '返回'
+      },
+      component: () => import(/* webpackChunkName: "personal" */ './views/Personal.vue')
+    },
+    {
+      path: '/workinfo',
+      name: 'workinfo',
+      meta: {
+        title: '工作信息',
+        backText: '返回'
+      },
+      component: () => import(/* webpackChunkName: "workinfo" */ './views/WorkInfo.vue')
+    },
+    {
+      path: '/conact',
+      name: 'conact',
+      meta: {
+        title: '联系人信息',
+        backText: '返回'
+      },
+      component: () => import(/* webpackChunkName: "conact" */ './views/Conact.vue')
     }
   ]
 })

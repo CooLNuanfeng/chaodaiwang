@@ -6,7 +6,7 @@
                 type="number"
                 required
                 label="借款金额"
-                placeholder="请输入借款金额"
+                placeholder="请输入借款金额,单位为元"
                 v-model="money"
                 @input="changeFn"
             />
@@ -64,7 +64,7 @@
                 type="info"
                 @click="doNext"
             >
-                保存
+                提交
             </van-button>
         </div>
         <!-- 公用 pop  -->
@@ -90,6 +90,8 @@ import {
     // Toast, 
     Icon,
 } from 'vant';
+
+import { mapMutations } from 'vuex'
 
 export default {
     name: 'currentApply',
@@ -119,6 +121,7 @@ export default {
         [Icon.name]: Icon,
     },
     methods: {
+        ...mapMutations(['setLoanApplyId']),
         changeFn(){
             if(!this.money || !this.term || !this.rePaymentFn || !this.useMsg || !this.rePayOrigin){
                 this.btnDisable = true
@@ -149,8 +152,17 @@ export default {
             this.showPicker = false;
         },
         doNext(){
-            console.log('save next');
-            
+            this.$axios.post('/borrow/loan',{
+                amount: this.money,
+                termType: 'MONTHLY',
+                term: parseInt(this.term),
+                repaymentMethod: this.rePayment == '等额本息'? 'AMORTIZATION': 'PAY_AT_THE_END',
+                purpose: this.useMsg,
+                repaymentSource: this.rePayOrigin,
+                referralCode: this.code
+            }).then(res => {
+                this.setLoanApplyId(res);
+            })
         }
     }
 }

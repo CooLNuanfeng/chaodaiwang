@@ -22,10 +22,10 @@ axios.interceptors.response.use(function (response) {
     // Do something with response error
     let errRestult = error.response.data
     if(errRestult.errorKey === "INTERNAL_ERROR"){
-      Toast.fail(errRestult.errorMsg)
-    }else if(errRestult.errorKey === "BUSINESS_ERROR"){
       Toast.fail('系统内部异常!')
-    }else if(errRestult.errorKey === ""){
+    }else if(errRestult.errorKey === "BUSINESS_ERROR"){
+      Toast.fail(errRestult.errorMsg)
+    }else if(errRestult.errorKey === "NEED_LOG"){
       Toast.fail('登陆超时，请重新登陆！')
     }else{
       return Promise.reject(error);
