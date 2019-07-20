@@ -5,7 +5,7 @@
       :active-color="color"
       :active-icon="status"
     >
-      <van-step>上传身份认证</van-step>
+      <van-step>上传身份证</van-step>
       <van-step>认证中</van-step>
       <van-step>{{statusText}}</van-step>
     </van-steps>
@@ -29,16 +29,17 @@ import {
     Button, 
     Icon, 
 } from 'vant'
+import { mapActions } from 'vuex';
 
 export default {
   name: 'stepStatus',
   data(){
     return{
-      active: 2,
+      active: 1,
       color: '#07c160', //#f44
-      statusText: '认证成功',
-      status: 'success',
-      btnDisable: false
+      statusText: '',
+      status: '',
+      btnDisable: true
     }
   },
   components: {
@@ -47,10 +48,25 @@ export default {
     [Button.name]: Button,
     [Icon.name]: Icon,
   },
+  mounted(){
+    console.log('实名认证接口');
+    setTimeout(() => {
+      this.active = 2
+      this.statusText = '认证成功',
+      this.status = 'success'
+      this.btnDisable = false
+    }, 2000);
+  },
   methods: {
+     ...mapActions(['getCurLoanApply']),
     doNext(){
-      console.log('next');
-      
+      this.getCurLoanApply().then(res => {
+        if(res.data.loanApply){
+          this.$router.push('/infoList')
+        }else{
+          this.$router.push('/createApply')
+        }
+      })
     }
   }
 }

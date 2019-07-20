@@ -101,7 +101,7 @@ import {
     // Toast, 
 } from 'vant';
 
-import {mapActions, mapGetters} from 'vuex'
+import {mapActions, mapGetters, mapMutations} from 'vuex'
 
 const weddingMap = {
     'MARRIED':'已婚',
@@ -160,6 +160,7 @@ export default {
         }
     },
     methods: {
+        ...mapMutations(['setLoanApplyInfoPersonal']),
         ...mapGetters(['getLoanApplyId']),
         ...mapActions(['getCurLoanApply']),
         makeData(data){
@@ -250,7 +251,8 @@ export default {
             }).then(res=>{
                 // console.log(res);
                 if(res.data){
-                    this.$router.push('/infoList')
+                    this.$router.replace('/infoList')
+                    this.setLoanApplyInfoPersonal(true)
                 }
             })
         },

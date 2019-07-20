@@ -52,6 +52,7 @@ import {
     Checkbox,
 } from 'vant';
 
+
 export default {
     name: 'login',
     data(){
@@ -73,9 +74,6 @@ export default {
     },
     computed: {
         ...mapGetters(['getAppName'])
-    },
-    mounted(){
-        
     },
     methods: {
         ...mapMutations(['setToken','setUserId']),
@@ -108,7 +106,8 @@ export default {
                     this.setUserId(res.data.userId);
                     localStorage.setItem('token',res.data.token);
                     localStorage.setItem('userId',res.data.userId);
-                    this.$router.push('/uploadCard')
+                    this.$router.push('/stepStatus')
+                    
                 }
             })
         }

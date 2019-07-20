@@ -165,7 +165,9 @@ export default {
                 repaymentSource: this.rePayOrigin,
                 referralCode: this.code
             }).then(res => {
-                this.setLoanApplyId(res);
+                if(res.data){
+                    this.$router.push('/infoList')
+                }
             })
         }
     }

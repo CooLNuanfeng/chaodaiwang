@@ -13,7 +13,8 @@ export default new Vuex.Store({
     appName: '超贷王',
     token: '',
     userId: '',
-    loanApplyId: ''
+    loanApplyId: '',
+    loanApplyInfo: null,
   },
   getters: {
     getAppName: state => state.appName,
@@ -22,7 +23,8 @@ export default new Vuex.Store({
     getNavTitle: state => state.navTitle,
     getToken: state => state.token,
     getUserId: state => state.userId,
-    getLoanApplyId: state => state.loanApplyId
+    getLoanApplyId: state => state.loanApplyId,
+    getLoanApplyInfo: state => state.loanApplyInfo,
   },
   mutations: {
     setNavLeftText: (state, text) => state.navLeftText = text,
@@ -31,12 +33,20 @@ export default new Vuex.Store({
     setToken: (state, token) => state.token = token,
     setUserId: (state, id) => state.userId = id,
     setLoanApplyId: (state, id) => state.loanApplyId = id,
+    setLoanApplyInfoById: (state, info) => state.loanApplyInfo = info,
+    setLoanApplyInfoPersonal: (state, flag) => state.loanApplyInfo.personalInfoIsComplated = flag,
+    setLoanApplyInfoJob: (state, flag) => state.loanApplyInfo.jobInfoIsComplated = flag,
+    setLoanApplyInfoContact: (state, flag) => state.loanApplyInfo.contactInfoIsComplated = flag,
+    setLoanApplyInfoDoc: (state, flag) => state.loanApplyInfo.documentIsComplated = flag,
   },
   actions: {
     getCurLoanApply: async ({commit})=>{
       const result = await axios.get('/borrow/loan/current')
       // console.log(result)
-      commit('setLoanApplyId', result.data.loanApply.id)
+      if(result.data.loanApply){
+        commit('setLoanApplyId', result.data.loanApply.id)
+        commit('setLoanApplyInfoById', result.data)
+      }
       return result
     }
   }

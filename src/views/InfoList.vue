@@ -22,7 +22,7 @@
                     <van-icon v-else size="40" name="warning-o" color="#f44"/>
                 </div>
             </van-grid-item>
-            <van-grid-item>
+            <van-grid-item to="/uploadDoc">
                 <div class="info-box">
                     <p>影像件</p>
                     <van-icon v-if="docInfoFlag" size="40" name="passed" color="#07c160"/>
@@ -43,11 +43,12 @@
 
 <script>
 import { Grid, GridItem, Icon } from 'vant';
-import {mapActions} from 'vuex'
+import {mapActions, mapGetters} from 'vuex'
 export default {
     name: 'infoList',
     data(){
         return {
+            loanApplyId: '',
             personalFlag: false,
             concatFlag: false,
             jobInfoFlag: false,
@@ -59,19 +60,36 @@ export default {
         [Grid.name]: Grid,
         [Icon.name]: Icon
     },
-    mounted(){
-        this.getCurLoanApply().then(res => {
-            if(res.data){
-                this.personalFlag = res.data.personalInfoIsComplated
-                this.concatFlag = res.data.contactInfoIsComplated
-                this.jobInfoFlag = res.data.jobInfoIsComplated
-                this.docInfoFlag = res.data.documentIsComplated
-            }
+    beforeRouteEnter (to, from, next) {  
+        next(vm => {
+            // console.log('beforeRouteEnter next');
+            vm.fetchData()
         })
     },
     methods: {
+        ...mapGetters(['getLoanApplyId','getLoanApplyInfo']),
         ...mapActions(['getCurLoanApply']),
-
+        fetchData(){
+            this.loanApplyId = this.getLoanApplyId();
+            if(this.loanApplyId){
+                let data = this.getLoanApplyInfo();
+                console.log(data,'data')
+                this.makeData(data)
+            }else{
+                this.getCurLoanApply().then(res => {
+                    if(res.data){
+                        this.loanApplyId = res.data.loanApply.id
+                        this.makeData(res.data)
+                    }
+                })
+            }
+        },
+        makeData(data){
+            this.personalFlag = data.personalInfoIsComplated
+            this.concatFlag = data.contactInfoIsComplated
+            this.jobInfoFlag = data.jobInfoIsComplated
+            this.docInfoFlag = data.documentIsComplated
+        },
     }
 }
 </script>

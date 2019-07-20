@@ -1,13 +1,14 @@
 import axios from 'axios'
 import { Toast } from 'vant';
 
-let token = localStorage.getItem('token')
-let userId = localStorage.getItem('userId')
-axios.defaults.headers.common['token'] = token
-axios.defaults.headers.common['user_id'] = userId
-
 axios.interceptors.request.use(function (config) {
     // Do something before request is sent
+    let token = localStorage.getItem('token')
+    let userId = localStorage.getItem('userId')
+    if(token && userId){
+      config.headers.token = token
+      config.headers.user_id = userId
+    }
     return config;
   }, function (error) {
     // Do something with request error

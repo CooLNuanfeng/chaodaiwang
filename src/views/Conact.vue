@@ -63,9 +63,12 @@ import {
     Divider,
     Row, 
     Col,
-    // Toast, 
+    Toast, 
 } from 'vant';
-import {mapActions, mapGetters} from 'vuex'
+
+import {isPhone} from '../utils/util'
+
+import {mapActions, mapGetters, mapMutations} from 'vuex'
 
 
 export default {
@@ -117,6 +120,7 @@ export default {
         [Divider.name]: Divider,
     },
     methods: {
+        ...mapMutations(['setLoanApplyInfoContact']),
         ...mapGetters(['getLoanApplyId']),
         ...mapActions(['getCurLoanApply']),
         fetchData(){
@@ -162,9 +166,16 @@ export default {
                 if(res.data){
                     this.contactList = this.contactList.filter(item => item.id !== id)
                 }
+                if(!this.contactList.length){
+                    this.setLoanApplyInfoContact(false)
+                }
             })
         },
         doAdd(){
+            if(!isPhone(this.contactPhone)){
+                Toast('手机号格式不正确')
+                return
+            }
             this.$axios.post(`/borrow/loan/${this.loanApplyId}/contactPerson`,[
                 {
                     name: this.contactName,
@@ -179,6 +190,7 @@ export default {
                     this.relation = ''
                     this.btnDisable = true
                     this.fetchData()
+                    this.setLoanApplyInfoContact(true)
                 }
             })
         }

@@ -106,7 +106,16 @@ const router = new Router({
         backText: '返回'
       },
       component: () => import(/* webpackChunkName: "conact" */ './views/Conact.vue')
-    }
+    },
+    {
+      path: '/uploadDoc',
+      name: 'uploadDoc',
+      meta: {
+        title: '影像件',
+        backText: '返回'
+      },
+      component: () => import(/* webpackChunkName: "uploadDoc" */ './views/UploadDoc.vue')
+    },
   ]
 })
 

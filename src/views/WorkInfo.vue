@@ -86,7 +86,7 @@ import {
     // Toast, 
 } from 'vant';
 
-import {mapActions, mapGetters} from 'vuex'
+import {mapActions, mapGetters, mapMutations} from 'vuex'
 
 const jobMap = {
     'EMPLOYEES_OF_ENTERPRISE': '企业员工',
@@ -142,6 +142,7 @@ export default {
         }
     },
     methods: {
+        ...mapMutations(['setLoanApplyInfoJob']),
         ...mapGetters(['getLoanApplyId']),
         ...mapActions(['getCurLoanApply']),
         makeData(data){
@@ -157,8 +158,9 @@ export default {
         },
         fetchData(){
             this.$axios.get(`/borrow/loan/${this.loanApplyId}/job`).then(res => {
-                console.log(res);
-                this.makeData(res.data)
+                if(res.data){
+                    this.makeData(res.data)
+                }    
             })
         },
         jobFn(){
@@ -207,7 +209,8 @@ export default {
                 "telExt": this.companyPhoneExt//办公电话分机号
             }).then(res => {
                 if(res.data){
-                    this.$router.push('/infoList')
+                    this.$router.replace('/infoList')
+                    this.setLoanApplyInfoJob(true)
                 }
             })
         }
