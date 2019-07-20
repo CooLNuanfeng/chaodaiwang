@@ -1,5 +1,14 @@
 <template>
     <div class="page-warp">
+        <div style="margin-bottom: 20px;" v-if="contactList.length">
+            <van-divider dashed :style="{ borderColor: '#ddd', padding: '0 20px' }">联系人列表</van-divider>
+            <div class="contact-list-item" v-for="item in contactList" :key="item.id">
+                <p>联系人姓名： {{item.name}}</p>
+                <p>联系人电话： {{item.phone}}</p>
+                <p>与借款人关系： {{relationMap[item.relation]}} <van-button type="danger" size="mini" @click="delItem(item.id)">删除</van-button></p>
+            </div>
+        </div>
+        <van-divider dashed :style="{ borderColor: '#ddd', padding: '0 20px' }">添加联系人</van-divider>
         <van-field
             required
             label="联系人姓名"
@@ -10,9 +19,11 @@
             required
             label="联系人手机号"
             v-model="contactPhone"
+            maxlength="11"
             placeholder="请输入联系人手机号"
         />
         <van-field
+            readonly
             required
             label="与借款人关系"
             v-model="relation"
@@ -24,9 +35,9 @@
                 :disabled="btnDisable"
                 :block="true"
                 type="info"
-                @click="doSave"
+                @click="doAdd"
             >
-                保存
+                添加联系人
             </van-button>
         </div>
 
@@ -48,8 +59,14 @@ import {
     Button, 
     Picker,
     Popup,
+    Panel,
+    Divider,
+    Row, 
+    Col,
     // Toast, 
 } from 'vant';
+import {mapActions, mapGetters} from 'vuex'
+
 
 export default {
     name: 'conact',
@@ -59,12 +76,22 @@ export default {
             contactName: '', //联系人姓名
             contactPhone: '', //联系人电话
             relation: '', //借款人关系
+            relationKey: '',
+
+            contactList: [], //联系人列表
 
             curPick: '', //当前的 picker
             showPicker: false, // pick 控制
             columns: [], //popPick colmun
 
             btnDisable: true,
+            relationMap: {
+                'PARENT':'父母',
+                'SIBLING':'兄弟姐妹',
+                'FRIEND':'朋友',
+                'CLASSMATE':'同事',
+                'OTHER':'其他',
+            }
         }
     },
     mounted(){
@@ -79,29 +106,33 @@ export default {
         }
     },
     components: {
+        [Row.name]: Row,
+        [Col.name]: Col,
         [CellGroup.name]: CellGroup,
         [Field.name]: Field,
         [Button.name]: Button,
         [Picker.name]: Picker,
         [Popup.name]: Popup,
+        [Panel.name]: Panel,
+        [Divider.name]: Divider,
     },
     methods: {
+        ...mapGetters(['getLoanApplyId']),
+        ...mapActions(['getCurLoanApply']),
         fetchData(){
-
+            this.$axios.get(`/borrow/loan/${this.loanApplyId}/contactPerson`).then(res => {
+                if(res.data){
+                    this.contactList = res.data
+                }
+            })
         },
-        jobFn(){
-            this.curPick = 'job'
+        relationFn(){
+            this.curPick = 'relation'
             this.columns = [
-                {'key': 'EMPLOYEES_OF_ENTERPRISE', 'text':'企业员工'},
-                {'key': 'CIVIL_SERVANTS', 'text':'公务员'},
-                {'key': 'TEACHERS', 'text':'教师'},
-                {'key': 'DOCTOR_NURSE_PHARMACIST', 'text':'医生/护士/药剂师'},
-                {'key': 'ACCOUNTANTS', 'text':'会计师'},
-                {'key': 'LAWYERS', 'text':'律师'},
-                {'key': 'ARCHITECTS', 'text':'建筑师'},
-                {'key': 'INDIVIDUAL_OPERATORS', 'text':'个体经营者'},
-                {'key': 'ENTERPRISE_PARTNER', 'text':'企业合伙人/股东/实际控股⼈'},
-                {'key': 'FREE', 'text':'⾃由职业者'},
+                {'key': 'PARENT', 'text':'父母'},
+                {'key': 'SIBLING', 'text':'兄弟姐妹'},
+                {'key': 'FRIEND', 'text':'朋友'},
+                {'key': 'CLASSMATE', 'text': '同事'},
                 {'key': 'OTHER', 'text':'其他'},
             ]
             this.showPicker = true
@@ -109,16 +140,47 @@ export default {
         onConfirm(item) {
             let current = this.curPick;
             switch(current){
-                case 'job':
-                    this.jobkey = item.key
-                    this.job = item.text
+                case 'relation':
+                    this.relation = item.text
+                    this.relationKey = item.key
                     break;
             }
             this.showPicker = false;
             this.changFn()
         },
         changFn(){
-
+            if(!this.contactName || !this.contactPhone || !this.relation){
+                this.btnDisable = true
+            }else{
+                this.btnDisable = false
+            }
+        },
+        delItem(id){
+            console.log(id);
+            this.$axios.delete(`/borrow/loan/${this.loanApplyId}/contactPerson/${id}`).then(res => {
+                console.log(res);
+                if(res.data){
+                    this.contactList = this.contactList.filter(item => item.id !== id)
+                }
+            })
+        },
+        doAdd(){
+            this.$axios.post(`/borrow/loan/${this.loanApplyId}/contactPerson`,[
+                {
+                    name: this.contactName,
+                    phone: this.contactPhone,
+                    relation: this.relationKey
+                }
+            ]).then(res => {
+                if(res.data){
+                    this.contactName = ''
+                    this.contactPhone = ''
+                    this.relationKey = ''
+                    this.relation = ''
+                    this.btnDisable = true
+                    this.fetchData()
+                }
+            })
         }
     }
 }

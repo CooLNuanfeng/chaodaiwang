@@ -6,7 +6,7 @@
                 type="number"
                 required
                 label="借款金额"
-                placeholder="请输入借款金额,单位为元"
+                placeholder="请输入借款金额,单位为元, 精度为10"
                 v-model="money"
                 @input="changeFn"
             />
@@ -87,7 +87,7 @@ import {
     Button, 
     Picker,
     Popup,
-    // Toast, 
+    Toast, 
     Icon,
 } from 'vant';
 
@@ -152,6 +152,10 @@ export default {
             this.showPicker = false;
         },
         doNext(){
+            if(this.money%10){
+                Toast.open('借款金额最小精度为10元')
+                return;
+            }
             this.$axios.post('/borrow/loan',{
                 amount: this.money,
                 termType: 'MONTHLY',

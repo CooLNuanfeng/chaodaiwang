@@ -7,7 +7,9 @@
                 :before-read="beforeRead" 
                 :after-read="afterRead"
                 name="front"
+                :max-size="1024 * 1024"
                 @delete="delFn('front')"
+                @oversize="oversizeFn"
             >
                 <div class="upload-flex">
                     <van-icon name="plus" />身份证正面
@@ -22,7 +24,9 @@
                 :before-read="beforeRead" 
                 :after-read="afterRead"
                 name="back"
+                :max-size="1024 * 1024"
                 @delete="delFn('back')"
+                @oversize="oversizeFn"
             >
                 <div class="upload-flex">
                     <van-icon name="plus" />身份证反面
@@ -50,6 +54,8 @@ import {
     Icon, 
 } from 'vant'
 
+import {mapActions} from 'vuex'
+
 export default {
     name: 'uploadCard',
     data(){
@@ -65,6 +71,7 @@ export default {
         [Button.name]: Button,
     },
     methods: {
+        ...mapActions(['getCurLoanApply']),
         delFn(name){
             if(name == 'front'){
                 this.cardFront = []
@@ -94,15 +101,40 @@ export default {
             // console.log(file,obj);
             if(obj.name == 'front'){
                 this.cardFront.push(file)
+                this.uploadCard('ID_CARD_FRONT', file)
             }
             if(obj.name == 'back'){
                 this.cardBack.push(file)
+                this.uploadCard('ID_CARD_BACK', file)
             }
             this.changeFn()
         },
+        oversizeFn(){
+            Toast('图片尺寸不能超过1M');
+        },
+        uploadCard(type, file){
+            // console.log(type, file);
+            var formData = new FormData();
+            // 将文件转二进制
+            formData.append('fileList', file.file);
+            this.$axios.post(`/borrow/file/${type}`,formData,{
+                headers: { 'content-type': 'application/form-data' }
+            }).then(res => {
+                if(res.data){
+                    Toast.success('上传成功');
+                }
+            })
+        },
         doSave(){
-            console.log('save');
-            
+            // console.log('save');
+            this.getCurLoanApply().then(res => {
+                // console.log(res);
+                if(res.data.loanApply && res.data.loanApply.id){
+                    this.$router.push('/stepStatus')
+                }else{
+                    this.$router.push('/createApply')
+                }
+            })
         }
     }
 }

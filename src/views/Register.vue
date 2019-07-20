@@ -31,11 +31,8 @@
         </van-cell-group>
         <div style="padding: 20px;">
             <div class="app-checkbox">
-                <van-checkbox 
-                    v-model="checked"
-                >
-                    <router-link to="/protocol">同意用户注册协议</router-link>
-                </van-checkbox>
+                <van-icon name="checked" color="#1989fa" size="20"/>
+                <router-link to="/protocol">同意用户注册协议</router-link>
             </div>
             <van-button 
                 :disabled="btnDisable"
@@ -62,6 +59,7 @@ import {
     Divider, 
     Button, 
     Checkbox,
+    Icon,
 } from 'vant';
 
 
@@ -84,7 +82,8 @@ export default {
         [Field.name]: Field,
         [Divider.name]: Divider,
         [Button.name]: Button,
-        [Checkbox.name]: Checkbox
+        [Checkbox.name]: Checkbox,
+        [Icon.name]: Icon,
     },
     computed: {
         ...mapGetters(['getAppName'])

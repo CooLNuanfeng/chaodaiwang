@@ -248,7 +248,7 @@ export default {
                 "spouseName": this.mateFlag ? this.mateName : '',//配偶姓名,婚姻状态为已婚时必填
                 "spousePhone": this.mateFlag ? this.matePhone : ''//配偶手机号,婚姻状态为已婚时必填
             }).then(res=>{
-                console.log(res);
+                // console.log(res);
                 if(res.data){
                     this.$router.push('/infoList')
                 }

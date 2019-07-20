@@ -21,13 +21,10 @@
             />
         </van-cell-group>
         <div style="padding: 20px;">
-            <div class="app-checkbox">
-                <van-checkbox 
-                    v-model="checked"
-                >
-                    <router-link to="/protocol">同意用户注册协议</router-link>
-                </van-checkbox>
-            </div>
+            <!-- <div class="app-checkbox">
+                <van-icon name="checked" color="#1989fa" size="20"/>
+                <router-link to="/protocol">同意用户注册协议</router-link>
+            </div> -->
             <van-button 
                 :disabled="btnDisable"
                 :block="true"

@@ -19,8 +19,12 @@ html,body{
     color: #666;
 }
 .app-checkbox{
+    display: flex;
+    align-items: center;
+    font-size: 14px;
     padding-bottom: 20px;
     a{
+        margin-left: 5px;
         color: $theme;
         text-decoration: underline;
     }
@@ -72,4 +76,14 @@ html,body{
     flex-direction: column;
     background: #fff;
     color: $theme;
+}
+
+.contact-list-item{
+    padding: 5px 20px;
+    background: #fff;
+    border-bottom: 1px solid #ebebeb;
+    font-size: 14px;
+    p button{
+        float: right
+    }
 }
