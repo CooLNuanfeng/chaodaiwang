@@ -139,15 +139,7 @@ export default {
             })
         },
         doSave(){
-            // console.log('save');
-            this.getCurLoanApply().then(res => {
-                // console.log(res);
-                if(res.data.loanApply && res.data.loanApply.id){
-                    this.$router.push('/stepStatus')
-                }else{
-                    this.$router.push('/createApply')
-                }
-            })
+            this.$router.push('/confirmId')
         }
     }
 }

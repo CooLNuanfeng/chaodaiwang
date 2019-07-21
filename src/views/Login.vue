@@ -106,8 +106,20 @@ export default {
                     this.setUserId(res.data.userId);
                     localStorage.setItem('token',res.data.token);
                     localStorage.setItem('userId',res.data.userId);
-                    this.$router.push('/stepStatus')
+
+                    //登录成功 是否实名认证
+                    this.checkUserInfo()
                     
+                }
+            })
+        },
+        checkUserInfo(){
+            this.$axios.get('/borrow/realName/status').then(res => {
+                if(res.data){
+                    //实名认证
+                    this.$router.push('/confirmId')
+                }else{
+                    this.$router.push('/uploadCard')
                 }
             })
         }

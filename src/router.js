@@ -72,6 +72,15 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "stepStatus" */ './views/StepStatus.vue')
     },
     {
+      path: '/confirmId',
+      name: 'confirmId',
+      meta: {
+        title: '确认身份信息',
+        backText: '返回'
+      },
+      component: () => import(/* webpackChunkName: "confirmId" */ './views/ConfirmId.vue')
+    },
+    {
       path: '/infoList',
       name: 'infoList',
       meta: {

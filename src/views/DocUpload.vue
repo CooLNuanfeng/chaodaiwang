@@ -112,7 +112,8 @@ export default {
             creditRegister: [],
             incomeRegister: [],
 
-            btnDisable: true,
+            marryFlag: false,
+            btnDisable: false,
         }
     },
     components: {
@@ -123,10 +124,12 @@ export default {
         this.loanApplyId = this.getLoanApplyId();
         if(this.loanApplyId){
             this.fetchData()
+            this.getMarryInfo()
         }else{
             this.getCurLoanApply().then(res => {
                 this.loanApplyId = res.data.loanApply.id
                 this.fetchData()
+                this.getMarryInfo()
             });
         }
         // this.$axios.delete(`/borrow/loan/${this.loanApplyId}/file/58`)
@@ -135,6 +138,13 @@ export default {
         ...mapMutations(['setLoanApplyInfoDoc']),
         ...mapGetters(['getLoanApplyId']),
         ...mapActions(['getCurLoanApply']),
+        getMarryInfo(){
+            this.$axios.get(`/borrow/loan/${this.loanApplyId}/personal`).then(res => {
+                if(res.data.maritalStatus == 'MARRIED'){
+                    this.marryFlag = true
+                }
+            })
+        },
         makeData(arr){
             arr.forEach(item => {
                 let file = { url: 'https://img.yzcdn.cn/vant/cat.jpeg',id: item.id }
@@ -163,6 +173,7 @@ export default {
             this.$axios.get(`/borrow/loan/${this.loanApplyId}/file`).then(res => {
                 // console.log(res.data);
                 this.makeData(res.data)
+                this.changeFn()
             })
         },
         beforeRead(files) {
@@ -201,7 +212,7 @@ export default {
             // console.log(file)
             this.$axios.delete(`/borrow/loan/${this.loanApplyId}/file/${file.id}`).then(res => {
                 console.log(res);
-                
+                this.changeFn()
             })
         },
         oversizeFn(){
@@ -219,10 +230,20 @@ export default {
                     item.id = res.data
                 })
             })
+            this.changeFn()
+        },
+        changeFn(){
+            if(!this.famliyRegister.length || !this.creditRegister.length || !this.incomeRegister.length){
+                this.btnDisable = true
+            }else if(this.marryFlag && !this.marryRegister.length){
+                this.btnDisable = true
+            }else{
+                this.btnDisable = false
+            }
         },
         doSave(){
-            console.log('save');
-            // this.setLoanApplyInfoDoc(true)
+            // console.log('save');
+            this.setLoanApplyInfoDoc(true)
             this.$router.replace('/infoList')
         }
     }

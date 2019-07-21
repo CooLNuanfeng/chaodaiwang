@@ -11,6 +11,18 @@
                 @input="inputFn"
             />
             <van-field
+                v-model="smsCode"
+                center
+                required
+                clearable
+                label="短信验证码"
+                maxlength="6"
+                placeholder="请输入短信验证码"
+                @input="inputFn"
+            >
+                <van-button slot="button" size="small" type="primary" :disabled="waiting" @click="getCodeFn">{{msgText}}</van-button>
+            </van-field>
+            <van-field
                 v-model="password"
                 type="password"
                 label="密码"
@@ -59,8 +71,10 @@ import {
     Divider, 
     Button, 
     Checkbox,
+    Toast,
     Icon,
 } from 'vant';
+import { setInterval, clearInterval } from 'timers';
 
 
 export default {
@@ -69,6 +83,9 @@ export default {
         return{
             checked: true,
             phone: '',
+            smsCode: '',
+            waiting: false,
+            msgText: '发送验证码',
             password: '',
             repassword: '',
             errPhoneMsg: '',
@@ -91,8 +108,35 @@ export default {
     
     methods: {
         ...mapMutations(['setToken','setUserId']),
+        getCodeFn(){
+            if(!this.phone){
+                Toast('请输入手机号')
+                return
+            }
+            this.$axios.post('/user/register/code',{
+                phone: this.phone
+            }).then(res => {
+                if(res.data){
+                    this.waiting = true
+                    this.msgText = '60s'
+                    this.countIntertimer()
+                }
+            })
+        },
+        countIntertimer(){
+            let count = 60
+            let timer = setInterval(()=>{
+                count--;
+                this.msgText = count + 's'
+                if(count<=0){
+                    clearInterval(timer)
+                    this.waiting = false
+                    this.msgText = '重新发送'
+                }
+            },1000);
+        },
         inputFn(){
-            if(this.phone && this.password && this.repassword){
+            if(this.phone && this.password && this.repassword && this.smsCode){
                 this.btnDisable = false
             }else{
                 this.btnDisable = true
@@ -121,7 +165,8 @@ export default {
             }
             this.$axios.post('/user/register',{
                 phone: this.phone,
-                password: this.password
+                password: this.password,
+                mobileCode: this.smsCode
             }).then(res => {
                 if(res.status == 200){
                     this.setToken(res.data.token);

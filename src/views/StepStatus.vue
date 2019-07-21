@@ -10,14 +10,14 @@
       <van-step>{{statusText}}</van-step>
     </van-steps>
     <div style="padding: 20px;">
-        <van-button 
-            :disabled="btnDisable"
-            :block="true"
-            type="info"
-            @click="doNext"
-        >
-            下一步
-        </van-button>
+      <van-button 
+          :disabled="btnDisable"
+          :block="true"
+          type="info"
+          @click="doNext"
+      >
+          下一步
+      </van-button>
     </div>
   </div>
 </template>
@@ -36,9 +36,12 @@ export default {
   data(){
     return{
       active: 1,
-      color: '#07c160', //#f44
+      color: '#07c160',
       statusText: '',
       status: '',
+
+      name: '',
+      idNumber: '',
       btnDisable: true
     }
   },
@@ -49,16 +52,23 @@ export default {
     [Icon.name]: Icon,
   },
   mounted(){
-    console.log('实名认证接口');
-    setTimeout(() => {
-      this.active = 2
-      this.statusText = '认证成功',
-      this.status = 'success'
-      this.btnDisable = false
-    }, 2000);
+    this.$axios.get('/borrow/realName/status').then(res => {
+      if(res.data){
+        this.active = 2
+        this.statusText = '认证成功',
+        this.status = 'success'
+        this.btnDisable = false
+      }else{
+        this.active = 2
+        this.statusText = '认证失败',
+        this.color = '#f44'
+        this.status = 'info'
+        this.btnDisable = true
+      }
+    })
   },
   methods: {
-     ...mapActions(['getCurLoanApply']),
+    ...mapActions(['getCurLoanApply']),
     doNext(){
       this.getCurLoanApply().then(res => {
         if(res.data.loanApply){
