@@ -3,12 +3,12 @@
         <div class="app-title">上传户⼝簿</div>
         <div class="upload-style">
             <van-uploader 
-                v-model="hukouImg"
+                v-model="hukouImg[0].file"
                 :before-read="beforeRead" 
                 :after-read="afterRead"
                 name="hukou"
                 :max-size="1024 * 1024"
-                @delete="delFn('hukou')"
+                @delete="delFn('hukou',hukouImg[0].id)"
                 @oversize="oversizeFn"
             >
                 <div class="upload-flex">
@@ -20,12 +20,12 @@
         <div class="app-title">上传结婚证</div>
         <div class="upload-style">
             <van-uploader 
-                v-model="weddingImg"
+                v-model="weddingImg[0].file"
                 :before-read="beforeRead" 
                 :after-read="afterRead"
                 name="wedding"
                 :max-size="1024 * 1024"
-                @delete="delFn('wedding')"
+                @delete="delFn('wedding',weddingImg[0].id)"
                 @oversize="oversizeFn"
             >
                 <div class="upload-flex">
@@ -36,12 +36,12 @@
         <div class="app-title">上传房产证</div>
         <div class="upload-style">
             <van-uploader 
-                v-model="houseImg"
+                v-model="houseImg[0].file"
                 :before-read="beforeRead" 
                 :after-read="afterRead"
                 name="house"
                 :max-size="1024 * 1024"
-                @delete="delFn('house')"
+                @delete="delFn('house',houseImg[0].id)"
                 @oversize="oversizeFn"
             >
                 <div class="upload-flex">
@@ -52,12 +52,12 @@
         <div class="app-title">上传征信报告</div>
         <div class="upload-style">
             <van-uploader 
-                v-model="creditImg"
+                v-model="creditImg[0].file"
                 :before-read="beforeRead" 
                 :after-read="afterRead"
                 name="credit"
                 :max-size="1024 * 1024"
-                @delete="delFn('credit')"
+                @delete="delFn('credit',creditImg[0].id)"
                 @oversize="oversizeFn"
             >
                 <div class="upload-flex">
@@ -68,12 +68,12 @@
         <div class="app-title">上传近6个月收入流水</div>
         <div class="upload-style">
             <van-uploader 
-                v-model="incomeImg"
+                v-model="incomeImg[0].file"
                 :before-read="beforeRead" 
                 :after-read="afterRead"
                 name="income"
                 :max-size="1024 * 1024"
-                @delete="delFn('income')"
+                @delete="delFn('income',incomeImg[0].id)"
                 @oversize="oversizeFn"
             >
                 <div class="upload-flex">
@@ -109,12 +109,13 @@ export default {
     data(){
         return{
             loanApplyId: '',
-            hukouImg: [],
-            weddingImg: [],
-            houseImg: [],
-            creditImg: [],
-            incomeImg: [],
+            hukouImg: [{}],
+            weddingImg: [{}],
+            houseImg: [{}],
+            creditImg: [{}],
+            incomeImg: [{}],
             btnDisable: true,
+            currentName: '',
         }
     },
     components: {
@@ -132,36 +133,49 @@ export default {
                 this.fetchData()
             });
         }
+        // this.$axios.delete(`/borrow/loan/${this.loanApplyId}/file/55`)
     },
     methods: {
         ...mapMutations(['setLoanApplyInfoDoc']),
         ...mapGetters(['getLoanApplyId']),
         ...mapActions(['getCurLoanApply']),
+        makeData(data){
+            data.forEach(item => {
+                if(item.type === 'HOUSEHOLD_REGISTER'){
+                    // this.hukouImg[0].file = 
+                }
+            });
+        },
         fetchData(){
             this.$axios.get(`/borrow/loan/${this.loanApplyId}/file`).then(res => {
                 console.log(res);
+                this.makeData(res.data)
             })
         },
-        delFn(name){
-            if(name == 'hukou'){
-                this.hukouImg = []
-            }
-            if(name == 'wedding'){
-                this.weddingImg = []
-            }
-            if(name == 'house'){
-                this.houseImg = []
-            }
-            if(name == 'credit'){
-                this.creditImg = []
-            }
-            if(name == 'income'){
-                this.incomeImg = []
-            }
-            this.btnDisable = true
+        delFn(name, id){
+            this.$axios.delete(`/borrow/loan/${this.loanApplyId}/file/${id}`).then(res => {
+                if(res.data){
+                    if(name == 'hukou'){
+                        this.hukouImg = [{}]
+                    }
+                    if(name == 'wedding'){
+                        this.weddingImg = [{}]
+                    }
+                    if(name == 'house'){
+                        this.houseImg = [{}]
+                    }
+                    if(name == 'credit'){
+                        this.creditImg = [{}]
+                    }
+                    if(name == 'income'){
+                        this.incomeImg = [{}]
+                    }
+                    this.changeFn()
+                }
+            })
         },
         changeFn(){
-            if(!this.hukouImg.length || !this.creditImg.length || !this.incomeImg.length){
+            if(!this.hukouImg[0].file || !this.creditImg.length || !this.incomeImg.length){
                 this.btnDisable = true
             }else{
                 this.btnDisable = false
@@ -178,24 +192,25 @@ export default {
         },
         afterRead(file,obj) {
             // console.log(file,obj);
+            this.currentName = obj.name
             if(obj.name == 'hukou'){
-                this.hukouImg.push(file)
+                this.hukouImg.push({file})
                 this.uploadCard('HOUSEHOLD_REGISTER', file)
             }
             if(obj.name == 'wedding'){
-                this.weddingImg.push(file)
+                this.weddingImg.push({file})
                 this.uploadCard('MARRIAGE_CERTIFICATE', file)
             }
             if(obj.name == 'house'){
-                this.houseImg.push(file)
+                this.houseImg.push({file})
                 this.uploadCard('HOUSE_CERTIFICATE', file)
             }
             if(obj.name == 'credit'){
-                this.creditImg.push(file)
+                this.creditImg.push({file})
                 this.uploadCard('CREDIT_REPORT', file)
             }
             if(obj.name == 'income'){
-                this.incomeImg.push(file)
+                this.incomeImg.push({file})
                 this.uploadCard('NEARLY_6_MONTHLY_INCOME', file)
             }
             this.changeFn()
@@ -207,12 +222,27 @@ export default {
             // console.log(type, file);
             var formData = new FormData();
             // 将文件转二进制
-            formData.append('fileList', file.file);
+            formData.append('file', file.file);
             this.$axios.post(`/borrow/loan/${this.loanApplyId}/file/${type}`,formData,{
                 headers: { 'content-type': 'application/form-data' }
             }).then(res => {
                 if(res.data){
                     Toast.success('上传成功');
+                    if(this.currentName == 'hukou'){
+                        this.hukouImg[0].id = res.data
+                    }
+                    if(this.currentName == 'wedding'){
+                        this.weddingImg[0] = res.data
+                    }
+                    if(this.currentName == 'house'){
+                        this.houseImg[0] = res.data
+                    }
+                    if(this.currentName == 'credit'){
+                        this.creditImg[0] = res.data
+                    }
+                    if(this.currentName == 'income'){
+                        this.incomeImg[0] = res.data
+                    }
                 }
             })
         },

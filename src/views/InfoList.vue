@@ -22,7 +22,7 @@
                     <van-icon v-else size="40" name="warning-o" color="#f44"/>
                 </div>
             </van-grid-item>
-            <van-grid-item to="/uploadDoc">
+            <van-grid-item to="/docUpload">
                 <div class="info-box">
                     <p>影像件</p>
                     <van-icon v-if="docInfoFlag" size="40" name="passed" color="#07c160"/>
