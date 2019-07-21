@@ -5,7 +5,7 @@ import Store from './store'
 Vue.use(Router)
 
 const router = new Router({
-  mode: 'history',
+  mode: 'hash',
   base: process.env.BASE_URL,
   routes: [
     {
@@ -124,6 +124,15 @@ const router = new Router({
         backText: '返回'
       },
       component: () => import(/* webpackChunkName: "docUpload" */ './views/DocUpload.vue')
+    },
+    {
+      path: '/test',
+      name: 'test',
+      meta: {
+        title: '影像件',
+        backText: '返回'
+      },
+      component: () => import(/* webpackChunkName: "test" */ './views/test.vue')
     },
   ]
 })

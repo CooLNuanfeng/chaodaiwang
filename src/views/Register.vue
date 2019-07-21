@@ -42,7 +42,7 @@
             />
         </van-cell-group>
         <div style="padding: 20px;">
-            <div class="app-checkbox">
+            <div class="app-checkbox" style="display:none;">
                 <van-icon name="checked" color="#1989fa" size="20"/>
                 <router-link to="/protocol">同意用户注册协议</router-link>
             </div>

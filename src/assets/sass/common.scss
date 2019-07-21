@@ -91,3 +91,17 @@ html,body{
 .upload-small{
     padding: 0 20px;
 }
+
+.upload-img{
+    display: inline-flex;
+    width: 80px;
+    height: 80px;
+    margin-right: 10px;
+    justify-content: center;
+    align-items: center;
+    vertical-align: top;
+    background: #fff;
+    border: 1px dashed #e5e5e5;
+    font-size: 14px;
+    color: #999;
+}

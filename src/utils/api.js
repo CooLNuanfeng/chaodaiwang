@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Toast } from 'vant';
 
-if(process.env.NODE_ENV == 'pruduction'){
+if(process.env.NODE_ENV == 'production'){
   axios.defaults.baseURL = 'http://47.105.50.132:8080'
 }
 axios.interceptors.request.use(function (config) {

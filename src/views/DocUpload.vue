@@ -2,10 +2,12 @@
     <div class="page-warp">
         <div class="app-title">上传户⼝簿(最多上传3张)</div>
         <div class="upload-small">
+            <div class="upload-img">点击查看</div>
             <van-uploader 
                 multiple
                 v-model="famliyRegister"
                 name="famliyregister"
+                :preview-image="false"
                 :max-size="maxSize"
                 :max-count="maxCount"
                 :before-read="beforeRead" 
