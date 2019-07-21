@@ -2,7 +2,7 @@
     <div class="page-warp">
         <div class="app-title">上传户⼝簿(最多上传3张)</div>
         <div class="upload-small">
-            <div class="upload-img">点击查看</div>
+            <div class="upload-img" v-for="item in famliyRegister" :key="item.id" :data-id="item.id">点击查看</div>
             <van-uploader 
                 multiple
                 v-model="famliyRegister"
@@ -18,9 +18,11 @@
         </div>
         <div class="app-title">上传结婚证(最多上传3张)</div>
         <div class="upload-small">
+            <div class="upload-img" v-for="item in marryRegister" :key="item.id" :data-id="item.id">点击查看</div>
             <van-uploader 
                 multiple
                 v-model="marryRegister"
+                :preview-image="false"
                 name="marryregister"
                 :max-size="maxSize"
                 :max-count="maxCount"
@@ -32,9 +34,11 @@
         </div>
         <div class="app-title">上传房产证(最多上传3张)</div>
         <div class="upload-small">
+            <div class="upload-img" v-for="item in houseRegister" :key="item.id" :data-id="item.id">点击查看</div>
             <van-uploader 
                 multiple
                 v-model="houseRegister"
+                :preview-image="false"
                 name="houseregister"
                 :max-size="maxSize"
                 :max-count="maxCount"
@@ -46,9 +50,11 @@
         </div>
         <div class="app-title">上传征信报告(最多上传3张)</div>
         <div class="upload-small">
+            <div class="upload-img" v-for="item in creditRegister" :key="item.id" :data-id="item.id">点击查看</div>
             <van-uploader 
                 multiple
                 v-model="creditRegister"
+                :preview-image="false"
                 name="creditregister"
                 :max-size="maxSize"
                 :max-count="maxCount"
@@ -60,9 +66,11 @@
         </div>
         <div class="app-title">上传近6个月收入流水(最多上传3张)</div>
         <div class="upload-small">
+            <div class="upload-img" v-for="item in incomeRegister" :key="item.id" :data-id="item.id">点击查看</div>
             <van-uploader 
                 multiple
                 v-model="incomeRegister"
+                :preview-image="false"
                 name="incomeregister"
                 :max-size="maxSize"
                 :max-count="maxCount"
@@ -149,7 +157,7 @@ export default {
         },
         makeData(arr){
             arr.forEach(item => {
-                let file = { url: 'https://img.yzcdn.cn/vant/cat.jpeg',id: item.id }
+                let file = { url: '',id: item.id }
                 switch(item.type){
                     case 'HOUSEHOLD_REGISTER':
                         this.famliyRegister.push(file)

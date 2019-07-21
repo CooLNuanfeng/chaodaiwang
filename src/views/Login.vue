@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import {mapGetters, mapMutations} from 'vuex'
+import {mapGetters, mapMutations, mapActions} from 'vuex'
 import {isPhone,checkPwdLen} from '../utils/util'
 import { 
     CellGroup, 
@@ -76,6 +76,7 @@ export default {
         ...mapGetters(['getAppName'])
     },
     methods: {
+        ...mapActions(['getCurLoanApply']),
         ...mapMutations(['setToken','setUserId']),
         inputFn(){
             if(this.phone && this.password){
@@ -117,7 +118,14 @@ export default {
             this.$axios.get('/borrow/realName/status').then(res => {
                 if(res.data){
                     //实名认证
-                    this.$router.push('/confirmId')
+                    this.getCurLoanApply().then(res => {
+                        if(res.data.loanApply && res.data.loanApply.id){
+                            this.$router.push('/infoList')
+                        }else{
+                            this.$router.push('/createApply')
+                        }
+                    });
+                    
                 }else{
                     this.$router.push('/uploadCard')
                 }
