@@ -40,7 +40,7 @@ import {
     Button, 
     // Icon, 
 } from 'vant'
-
+import {mapActions} from 'vuex'
 export default {
     name: 'confrimId',
     data(){
@@ -65,6 +65,7 @@ export default {
         })
     },
     methods: {
+        ...mapActions(['getCurLoanApply']),
         changeFn(){
             if(!this.name || !this.idNumber){
                 this.btnDisable = true
@@ -73,14 +74,22 @@ export default {
             }
         },
         doNext(){
-            this.getCurLoanApply().then(res => {
-                if(res.data.loanApply && res.data.loanApply.id){
-                    // this.$router.push('/stepStatus')
-                    this.$router.push('/infoList')
-                }else{
-                    this.$router.push('/createApply')
+            this.$axios.post('/borrow/idCard',{
+                name: this.name,
+                idNo: this.idNumber
+            }).then(res => {
+                if(res.data){
+                    this.getCurLoanApply().then(res => {
+                        if(res.data.loanApply && res.data.loanApply.id){
+                            // this.$router.push('/stepStatus')
+                            this.$router.push('/infoList')
+                        }else{
+                            this.$router.push('/createApply')
+                        }
+                    })
                 }
             })
+            
         }
     }
 }
