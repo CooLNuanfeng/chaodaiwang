@@ -1,6 +1,6 @@
 <template>
     <div class="page-warp">
-        <van-grid :column-num="3">
+        <van-grid :column-num="2">
             <van-grid-item to="/personal">
                 <div class="info-box">
                     <p>个人信息</p>
@@ -29,13 +29,13 @@
                     <van-icon v-else size="40" name="warning-o" color="#f44"/>
                 </div>
             </van-grid-item>
-            <van-grid-item>
+            <!-- <van-grid-item>
                 <div class="info-box">
                     <p>三方授权</p>
                     <van-icon size="40" name="passed" color="#07c160"/>
                     <van-icon size="40" name="warning-o" color="#f44"/>
                 </div>
-            </van-grid-item>
+            </van-grid-item> -->
         </van-grid>
         
     </div>
