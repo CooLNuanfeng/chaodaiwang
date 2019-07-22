@@ -37,12 +37,21 @@
                 </div>
             </van-grid-item> -->
         </van-grid>
-        
+        <div style="padding: 20px;">
+            <van-button 
+                :disabled="btnDisable"
+                :block="true"
+                type="info"
+                @click="doSubmit"
+            >
+                提交审核
+            </van-button>
+        </div>
     </div>
 </template>
 
 <script>
-import { Grid, GridItem, Icon } from 'vant';
+import { Grid, GridItem, Icon, Button } from 'vant';
 import {mapActions, mapGetters} from 'vuex'
 export default {
     name: 'infoList',
@@ -53,12 +62,14 @@ export default {
             concatFlag: false,
             jobInfoFlag: false,
             docInfoFlag: false,
+            btnDisable: true,
         }
     },
     components: {
         [GridItem.name]: GridItem,
         [Grid.name]: Grid,
-        [Icon.name]: Icon
+        [Icon.name]: Icon,
+        [Button.name]: Button
     },
     beforeRouteEnter (to, from, next) {  
         next(vm => {
@@ -89,7 +100,22 @@ export default {
             this.concatFlag = data.contactInfoIsComplated
             this.jobInfoFlag = data.jobInfoIsComplated
             this.docInfoFlag = data.documentIsComplated
+            this.buttonStatus()
         },
+        buttonStatus(){
+            if(this.personalFlag && this.concatFlag && this.jobInfoFlag && this.docInfoFlag){
+                this.btnDisable = false
+            }else{
+                this.btnDisable = true
+            }
+        },
+        doSubmit(){
+            this.$axios.post(`/borrow/loan/${this.loanApplyId}/submite`).then(res => {
+                if(res.data){
+                    this.$router.push('/stepStatus')
+                }
+            })
+        }
     }
 }
 </script>

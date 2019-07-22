@@ -119,13 +119,19 @@ export default {
                 if(res.data){
                     //实名认证
                     this.getCurLoanApply().then(res => {
-                        if(res.status == 'APPLY'){
-                            this.$router.push('/infoList')
-                        }else if(res.status == 'SUBMITED'){
-                            this.$router.push('/stepStatus')
+                        let resultLoanApply = res.data.loanApply
+                        if(resultLoanApply){
+                            if(resultLoanApply.status == 'APPLY'){
+                                this.$router.push('/infoList')
+                            }else if(resultLoanApply.status == 'SUBMITED'){
+                                this.$router.push('/stepStatus')
+                            }else{
+                                this.$router.push('/createApply')
+                            }
                         }else{
                             this.$router.push('/createApply')
                         }
+                        
                     });
                     
                 }else{

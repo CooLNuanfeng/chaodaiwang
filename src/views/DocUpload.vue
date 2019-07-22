@@ -2,7 +2,7 @@
     <div class="page-warp">
         <div class="app-title">上传户⼝簿(最多上传3张)</div>
         <div class="upload-small">
-            <div class="upload-img" v-for="item in famliyRegister" :key="item.id" :data-id="item.id" @click="previewFn(item.id)">点击查看</div>
+            <div class="upload-img" v-for="item in famliyRegister" :key="item.id" :data-id="item.id" @click="previewFn(item.id)">点击查看<van-icon name="delete" size="20" color="#fff" @click.stop="delFn(item.id, 'famliy')" /></div>
             <van-uploader 
                 multiple
                 v-model="famliyRegister"
@@ -18,7 +18,7 @@
         </div>
         <div class="app-title">上传结婚证(最多上传3张)</div>
         <div class="upload-small">
-            <div class="upload-img" v-for="item in marryRegister" :key="item.id" :data-id="item.id" @click="previewFn(item.id)">点击查看</div>
+            <div class="upload-img" v-for="item in marryRegister" :key="item.id" :data-id="item.id" @click="previewFn(item.id)">点击查看<van-icon name="delete" size="20" color="#fff" @click.stop="delFn(item.id, 'marry')" /></div>
             <van-uploader 
                 multiple
                 v-model="marryRegister"
@@ -34,7 +34,7 @@
         </div>
         <div class="app-title">上传房产证(最多上传3张)</div>
         <div class="upload-small">
-            <div class="upload-img" v-for="item in houseRegister" :key="item.id" :data-id="item.id" @click="previewFn(item.id)">点击查看</div>
+            <div class="upload-img" v-for="item in houseRegister" :key="item.id" :data-id="item.id" @click="previewFn(item.id)">点击查看<van-icon name="delete" size="20" color="#fff" @click.stop="delFn(item.id, 'house')" /></div>
             <van-uploader 
                 multiple
                 v-model="houseRegister"
@@ -50,7 +50,7 @@
         </div>
         <div class="app-title">上传征信报告(最多上传3张)</div>
         <div class="upload-small">
-            <div class="upload-img" v-for="item in creditRegister" :key="item.id" :data-id="item.id" @click="previewFn(item.id)">点击查看</div>
+            <div class="upload-img" v-for="item in creditRegister" :key="item.id" :data-id="item.id" @click="previewFn(item.id)">点击查看<van-icon name="delete" size="20" color="#fff" @click.stop="delFn(item.id, 'credit')" /></div>
             <van-uploader 
                 multiple
                 v-model="creditRegister"
@@ -66,7 +66,7 @@
         </div>
         <div class="app-title">上传近6个月收入流水(最多上传3张)</div>
         <div class="upload-small">
-            <div class="upload-img" v-for="item in incomeRegister" :key="item.id" :data-id="item.id" @click="previewFn(item.id)">点击查看</div>
+            <div class="upload-img" v-for="item in incomeRegister" :key="item.id" :data-id="item.id" @click="previewFn(item.id)">点击查看<van-icon name="delete" size="20" color="#fff" @click.stop="delFn(item.id, 'income')" /></div>
             <van-uploader 
                 multiple
                 v-model="incomeRegister"
@@ -80,7 +80,7 @@
                 @oversize="oversizeFn"
             />
         </div>
-        <div style="padding: 20px;">
+        <!-- <div style="padding: 20px;">
             <van-button 
                 :disabled="btnDisable"
                 :block="true"
@@ -89,7 +89,7 @@
             >
                 保存
             </van-button>
-        </div>
+        </div> -->
         <van-popup
             v-model="popShow"
         >
@@ -104,6 +104,7 @@ import {
     Button,
     Popup,  
     Toast,
+    Icon,
 } from 'vant'
 
 import {mapActions, mapGetters, mapMutations} from 'vuex'
@@ -139,6 +140,7 @@ export default {
         [Uploader.name]: Uploader,
         [Popup.name]: Popup,
         [Button.name]: Button,
+        [Icon.name]: Icon
     },
     mounted(){
         this.loanApplyId = this.getLoanApplyId();
@@ -235,11 +237,27 @@ export default {
             }
             this.UploaderDoc(upArr, obj.name)
         },
-        delFn(file){
+        delFn(id,name){
             // console.log(file)
-            this.$axios.delete(`/borrow/loan/${this.loanApplyId}/file/${file.id}`).then(res => {
-                console.log(res);
-                this.changeFn()
+            this.$axios.delete(`/borrow/loan/${this.loanApplyId}/file/${id}`).then(res => {
+                if(res.data){
+                    switch(name){
+                        case 'famliy':
+                            this.famliyRegister =  this.famliyRegister.filter(item => item.id != id)
+                            break;
+                        case 'marry':
+                            this.marryRegister =  this.marryRegister.filter(item => item.id != id)
+                            break;
+                        case 'credit':
+                            this.creditRegister =  this.creditRegister.filter(item => item.id != id)
+                            break;
+                        case 'income':
+                            this.incomeRegister =  this.incomeRegister.filter(item => item.id != id)
+                            break;
+                    }
+                    this.changeFn()
+                }
+                
             })
         },
         oversizeFn(){
@@ -262,17 +280,20 @@ export default {
         changeFn(){
             if(!this.famliyRegister.length || !this.creditRegister.length || !this.incomeRegister.length){
                 this.btnDisable = true
+                this.setLoanApplyInfoDoc(false)
             }else if(this.marryFlag && !this.marryRegister.length){
                 this.btnDisable = true
+                this.setLoanApplyInfoDoc(false)
             }else{
                 this.btnDisable = false
+                this.setLoanApplyInfoDoc(true)
             }
         },
-        doSave(){
-            // console.log('save');
-            this.setLoanApplyInfoDoc(true)
-            this.$router.replace('/infoList')
-        }
+        // doSave(){
+        //     // console.log('save');
+        //     this.setLoanApplyInfoDoc(true)
+        //     this.$router.replace('/infoList')
+        // }
     }
 }
 </script>

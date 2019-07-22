@@ -93,6 +93,7 @@ html,body{
 }
 
 .upload-img{
+    position: relative;
     display: inline-flex;
     width: 80px;
     height: 80px;
@@ -104,4 +105,12 @@ html,body{
     border: 1px dashed #e5e5e5;
     font-size: 14px;
     color: #999;
+    i{
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: 20px;
+        height: 20px;
+        background: rgba(0,0,0,.5);
+    }
 }

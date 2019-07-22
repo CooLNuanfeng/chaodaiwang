@@ -66,7 +66,7 @@ const router = new Router({
       path: '/stepStatus',
       name: 'stepStatus',
       meta: {
-        title: '认证进度',
+        title: '审核进度',
         backText: '返回'
       },
       component: () => import(/* webpackChunkName: "stepStatus" */ './views/StepStatus.vue')

@@ -5,20 +5,20 @@
       :active-color="color"
       :active-icon="status"
     >
-      <van-step>上传身份证</van-step>
-      <van-step>认证中</van-step>
+      <van-step>提交审核</van-step>
+      <van-step>审核中</van-step>
       <van-step>{{statusText}}</van-step>
     </van-steps>
-    <div style="padding: 20px;">
+    <!-- <div style="padding: 20px;">
       <van-button 
           :disabled="btnDisable"
           :block="true"
           type="info"
           @click="doNext"
       >
-          下一步
-      </van-button>
-    </div>
+          我知道了
+      </van-button> 
+    </div>-->
   </div>
 </template>
 
@@ -52,31 +52,31 @@ export default {
     [Icon.name]: Icon,
   },
   mounted(){
-    this.$axios.get('/borrow/realName/status').then(res => {
-      if(res.data){
-        this.active = 2
-        this.statusText = '认证成功',
-        this.status = 'success'
-        this.btnDisable = false
-      }else{
-        this.active = 2
-        this.statusText = '认证失败',
-        this.color = '#f44'
-        this.status = 'info'
-        this.btnDisable = true
-      }
-    })
+    // this.$axios.get('/borrow/realName/status').then(res => {
+    //   if(res.data){
+    //     this.active = 2
+    //     this.statusText = '审核成功',
+    //     this.status = 'success'
+    //     this.btnDisable = false
+    //   }else{
+    //     this.active = 2
+    //     this.statusText = '审核失败',
+    //     this.color = '#f44'
+    //     this.status = 'info'
+    //     this.btnDisable = true
+    //   }
+    // })
   },
   methods: {
     ...mapActions(['getCurLoanApply']),
     doNext(){
-      this.getCurLoanApply().then(res => {
-        if(res.data.loanApply){
-          this.$router.push('/infoList')
-        }else{
-          this.$router.push('/createApply')
-        }
-      })
+      // this.getCurLoanApply().then(res => {
+      //   if(res.data.loanApply){
+      //     this.$router.push('/infoList')
+      //   }else{
+      //     this.$router.push('/createApply')
+      //   }
+      // })
     }
   }
 }

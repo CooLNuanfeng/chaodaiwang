@@ -47,11 +47,6 @@
             @click="weddingFn"
         />
         <div v-show="mateFlag">
-            <!-- <van-field
-                label="⼦女情况"
-                v-model="children"
-                placeholder="请输入子女情况"
-            /> -->
             <van-field
                 :required="mateFlag"
                 label="配偶姓名"
@@ -69,6 +64,15 @@
                 @input="changFn"
             />
         </div>
+        <van-field
+            clickable
+            required
+            readonly
+            label="子女状况"
+            v-model="children"
+            placeholder="选择子女状态"
+            @click="childrenFn"
+        />
         <div style="padding: 20px;">
             <van-button 
                 :disabled="btnDisable"
@@ -118,6 +122,14 @@ const eduMap = {
     'MASTER_AND_ABOVE':'硕士及以上',
 }
 
+const childMap = {
+    'NOT_HAVE':"无子女",
+    'ONE':"1个",
+    'TOW':"2个",
+    'THREE':"3个",
+    'FOUR_MORE':"4个及以上"
+}
+
 export default {
     name: 'personal',
     data(){
@@ -132,6 +144,7 @@ export default {
             wedding: '', //婚姻状况
             weddingStatus: '', //婚姻key
             children: '', //子女状况
+            childrenStatus: '',
             mateFlag: false, //配偶标记
             mateName: '', //配偶姓名
             matePhone: '', //配偶手机
@@ -174,7 +187,8 @@ export default {
             this.wedding = weddingMap[data.maritalStatus]
             this.eduStatus = data.educateLevel
             this.edu = eduMap[data.educateLevel]
-            this.children = data.childrenStatus
+            this.childrenStatus = data.childrenStatus
+            this.children = childMap[data.childrenStatus]
             this.mateFlag = data.maritalStatus === 'MARRIED' ? true: false
             this.mateName = data.spouseName ? data.spouseName : ''
             this.matePhone = data.spousePhone ? data.spousePhone : ''
@@ -193,6 +207,17 @@ export default {
                 {'key': 'UNMARRIED', 'text':'未婚'},
                 {'key': 'DIVORCE', 'text':'离异'},
                 {'key': 'WIDOWHOOD', 'text':'丧偶'},
+            ]
+            this.showPicker = true
+        },
+        childrenFn(){
+            this.curPick = 'children'
+            this.columns = [
+                {'key': 'NOT_HAVE', 'text':'无子女'},
+                {'key': 'ONE', 'text':'1个'},
+                {'key': 'TWO', 'text':'2个'},
+                {'key': 'THREE', 'text':'3个'},
+                {'key': 'FOUR_MORE', 'text':'4个以上'},
             ]
             this.showPicker = true
         },
@@ -221,6 +246,10 @@ export default {
                 case 'edu':
                     this.eduStatus = item.key
                     this.edu = item.text
+                    break;
+                case 'children':
+                    this.childrenStatus = item.key
+                    this.children = item.text
                     break;
             }
             this.showPicker = false;
@@ -251,7 +280,7 @@ export default {
                 "residenceAddrDetail": this.address,//居住详细地址
                 "educateLevel": this.eduStatus,
                 "maritalStatus": this.weddingStatus,
-                // "childrenStatus": this.children,//子女状态，暂时为空
+                "childrenStatus": this.childrenStatus,//子女状态，暂时为空
                 "spouseName": this.mateFlag ? this.mateName : '',//配偶姓名,婚姻状态为已婚时必填
                 "spousePhone": this.mateFlag ? this.matePhone : ''//配偶手机号,婚姻状态为已婚时必填
             }).then(res=>{
