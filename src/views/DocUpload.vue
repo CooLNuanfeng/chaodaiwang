@@ -2,7 +2,7 @@
     <div class="page-warp">
         <div class="app-title">上传户⼝簿(最多上传3张)</div>
         <div class="upload-small">
-            <div class="upload-img" v-for="item in famliyRegister" :key="item.id" :data-id="item.id">点击查看</div>
+            <div class="upload-img" v-for="item in famliyRegister" :key="item.id" :data-id="item.id" @click="previewFn(item.id)">点击查看</div>
             <van-uploader 
                 multiple
                 v-model="famliyRegister"
@@ -18,7 +18,7 @@
         </div>
         <div class="app-title">上传结婚证(最多上传3张)</div>
         <div class="upload-small">
-            <div class="upload-img" v-for="item in marryRegister" :key="item.id" :data-id="item.id">点击查看</div>
+            <div class="upload-img" v-for="item in marryRegister" :key="item.id" :data-id="item.id" @click="previewFn(item.id)">点击查看</div>
             <van-uploader 
                 multiple
                 v-model="marryRegister"
@@ -34,7 +34,7 @@
         </div>
         <div class="app-title">上传房产证(最多上传3张)</div>
         <div class="upload-small">
-            <div class="upload-img" v-for="item in houseRegister" :key="item.id" :data-id="item.id">点击查看</div>
+            <div class="upload-img" v-for="item in houseRegister" :key="item.id" :data-id="item.id" @click="previewFn(item.id)">点击查看</div>
             <van-uploader 
                 multiple
                 v-model="houseRegister"
@@ -50,7 +50,7 @@
         </div>
         <div class="app-title">上传征信报告(最多上传3张)</div>
         <div class="upload-small">
-            <div class="upload-img" v-for="item in creditRegister" :key="item.id" :data-id="item.id">点击查看</div>
+            <div class="upload-img" v-for="item in creditRegister" :key="item.id" :data-id="item.id" @click="previewFn(item.id)">点击查看</div>
             <van-uploader 
                 multiple
                 v-model="creditRegister"
@@ -66,7 +66,7 @@
         </div>
         <div class="app-title">上传近6个月收入流水(最多上传3张)</div>
         <div class="upload-small">
-            <div class="upload-img" v-for="item in incomeRegister" :key="item.id" :data-id="item.id">点击查看</div>
+            <div class="upload-img" v-for="item in incomeRegister" :key="item.id" :data-id="item.id" @click="previewFn(item.id)">点击查看</div>
             <van-uploader 
                 multiple
                 v-model="incomeRegister"
@@ -90,13 +90,19 @@
                 保存
             </van-button>
         </div>
+        <van-popup
+            v-model="popShow"
+        >
+            <img :src="previewImgDataUrl" alt="" style="width:100%">
+        </van-popup>
     </div>
 </template>
 
 <script>
 import { 
     Uploader,
-    Button,  
+    Button,
+    Popup,  
     Toast,
 } from 'vant'
 
@@ -124,10 +130,14 @@ export default {
 
             marryFlag: false,
             btnDisable: false,
+
+            popShow: false,
+            previewImgDataUrl: '',
         }
     },
     components: {
         [Uploader.name]: Uploader,
+        [Popup.name]: Popup,
         [Button.name]: Button,
     },
     mounted(){
@@ -184,6 +194,13 @@ export default {
                 // console.log(res.data);
                 this.makeData(res.data)
                 this.changeFn()
+            })
+        },
+        previewFn(id){
+            this.$axios.get(`/borrow/file/${id}`).then(res => {
+                // console.log(res);
+                this.previewImgDataUrl = 'data:image/png;base64,'+res.data
+                this.popShow = true 
             })
         },
         beforeRead(files) {
