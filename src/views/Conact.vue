@@ -160,9 +160,9 @@ export default {
             }
         },
         delItem(id){
-            console.log(id);
+            // console.log(id);
             this.$axios.delete(`/borrow/loan/${this.loanApplyId}/contactPerson/${id}`).then(res => {
-                console.log(res);
+                // console.log(res);
                 if(res.data){
                     this.contactList = this.contactList.filter(item => item.id !== id)
                 }

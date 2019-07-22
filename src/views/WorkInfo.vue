@@ -83,9 +83,9 @@ import {
     Button, 
     Picker,
     Popup,
-    // Toast, 
+    Toast, 
 } from 'vant';
-
+import {isCellPhone, isExtPhone} from '../utils/util'
 import {mapActions, mapGetters, mapMutations} from 'vuex'
 
 const jobMap = {
@@ -199,6 +199,11 @@ export default {
             }
         },
         doSave(){
+            if(!isCellPhone(this.companyPhone) || !isExtPhone(this.companyPhoneExt)){
+                Toast('电话格式不正确')
+                return
+            }
+
             this.$axios.post(`/borrow/loan/${this.loanApplyId}/job`,{
                 "monthlyIncome": this.salary,//月收入
                 "incomePayDate": this.salaryDay + "号",//发薪日

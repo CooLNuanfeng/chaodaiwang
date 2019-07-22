@@ -7,7 +7,7 @@
                 :before-read="beforeRead" 
                 :after-read="afterRead"
                 name="front"
-                :max-size="1024 * 1024"
+                :max-size="1024 * 1024 * 10"
                 @delete="delFn('front',cardFront[0].id)"
                 @oversize="oversizeFn"
             >
@@ -24,7 +24,7 @@
                 :before-read="beforeRead" 
                 :after-read="afterRead"
                 name="back"
-                :max-size="1024 * 1024"
+                :max-size="1024 * 1024 * 10"
                 @delete="delFn('back',cardBack[0].id)"
                 @oversize="oversizeFn"
             >

@@ -121,7 +121,7 @@ export default {
     data(){
         return {
             maxCount: 3,
-            maxSize: 1024 * 1024,
+            maxSize: 1024 * 1024 * 10,
             famliyRegister: [],
             marryRegister: [],
             houseRegister: [],

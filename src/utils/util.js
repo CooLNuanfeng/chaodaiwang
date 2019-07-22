@@ -3,6 +3,16 @@ export const isPhone = (phone) => {
     return reg.test(phone)
 }
 
+export const isCellPhone = (phone) => {
+    let reg = /^([\d-+]*)$/;
+    return reg.test(phone);
+}
+
+export const isExtPhone = (phone) => {
+    let reg = /\d+/
+    return reg.test(phone)
+}
+
 export const checkPwdLen = (pwd) => {
     return pwd.length >=6 && pwd.length<=12;
 }

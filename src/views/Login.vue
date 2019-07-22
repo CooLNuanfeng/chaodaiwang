@@ -119,8 +119,10 @@ export default {
                 if(res.data){
                     //实名认证
                     this.getCurLoanApply().then(res => {
-                        if(res.data.loanApply && res.data.loanApply.id){
+                        if(res.status == 'APPLY'){
                             this.$router.push('/infoList')
+                        }else if(res.status == 'SUBMITED'){
+                            this.$router.push('/stepStatus')
                         }else{
                             this.$router.push('/createApply')
                         }

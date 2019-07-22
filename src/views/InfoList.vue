@@ -73,7 +73,7 @@ export default {
             this.loanApplyId = this.getLoanApplyId();
             if(this.loanApplyId){
                 let data = this.getLoanApplyInfo();
-                console.log(data,'data')
+                // console.log(data,'data')
                 this.makeData(data)
             }else{
                 this.getCurLoanApply().then(res => {

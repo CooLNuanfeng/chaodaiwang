@@ -98,10 +98,12 @@ import {
     Button, 
     Picker,
     Popup,
-    // Toast, 
+    Toast, 
 } from 'vant';
 
 import {mapActions, mapGetters, mapMutations} from 'vuex'
+
+import {isPhone} from '../utils/util'
 
 const weddingMap = {
     'MARRIED':'已婚',
@@ -180,7 +182,7 @@ export default {
         },
         fetchData(){
             this.$axios.get(`/borrow/loan/${this.getLoanApplyId()}/personal`).then(res=>{
-                console.log(res);
+                // console.log(res);
                 this.makeData(res.data)
             })
         },
@@ -238,6 +240,10 @@ export default {
             }
         },
         doSave(){
+            if(this.mateFlag && !isPhone(this.matePhone)){
+                Toast('手机号格式不正确')
+                return
+            }
             this.$axios.post(`/borrow/loan/${this.getLoanApplyId()}/personal`,{
                 "residenceAddrProvince": this.province,//居住省份
                 "residenceAddrCoty": this.city,//居住城市
