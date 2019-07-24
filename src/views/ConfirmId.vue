@@ -10,9 +10,9 @@
                 @input="changeFn"
             />
             <van-field
-                :value="idNumber"
                 readonly
                 clickable
+                :value="idNumber"
                 @touchstart.native.stop="numberKeyboardShow = true"
                 label="身份证号"
                 placeholder="请输入身份证号"
@@ -47,8 +47,11 @@ import {
     Divider, 
     Button, 
     NumberKeyboard,
+    Toast,
     // Icon, 
 } from 'vant'
+
+import {isIdCard} from '../utils/util'
 
 import {mapActions} from 'vuex'
 
@@ -73,7 +76,7 @@ export default {
         this.$axios.get(`/borrow/idCard`).then(res => {
             // console.log(res);
             this.name = res.data.name
-            this.idNumber = res.data.idNo
+            this.idNumber = res.data.idNo || ''
             this.changeFn()
         })
     },
@@ -87,6 +90,10 @@ export default {
             }
         },
         doNext(){
+            if(!isIdCard(this.idNumber)){
+                Toast('请输入正确的身份证号')
+                return;
+            }
             this.$axios.post('/borrow/idCard',{
                 name: this.name,
                 idNo: this.idNumber
