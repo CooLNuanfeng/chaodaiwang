@@ -81,19 +81,12 @@ export default {
         ...mapGetters(['getLoanApplyId','getLoanApplyInfo']),
         ...mapActions(['getCurLoanApply']),
         fetchData(){
-            this.loanApplyId = this.getLoanApplyId();
-            if(this.loanApplyId){
-                let data = this.getLoanApplyInfo();
-                // console.log(data,'data')
-                this.makeData(data)
-            }else{
-                this.getCurLoanApply().then(res => {
-                    if(res.data){
-                        this.loanApplyId = res.data.loanApply.id
-                        this.makeData(res.data)
-                    }
-                })
-            }
+            this.getCurLoanApply().then(res => {
+                if(res.data){
+                    this.loanApplyId = res.data.loanApply.id
+                    this.makeData(res.data)
+                }
+            })
         },
         makeData(data){
             this.personalFlag = data.personalInfoIsComplated

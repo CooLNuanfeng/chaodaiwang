@@ -3,20 +3,20 @@
         <van-divider dashed :style="{ borderColor: '#ddd', padding: '0 20px' }">身份信息</van-divider>
         <van-cell-group>
             <van-field
-            v-model="name"
-            label="姓名"
-            required
-            placeholder="请输入姓名"
-            @input="changeFn"
+                v-model="name"
+                label="姓名"
+                required
+                placeholder="请输入姓名"
+                @input="changeFn"
             />
             <van-field
-                v-model="idNumber"
-                type="number"
+                :value="idNumber"
+                readonly
+                clickable
+                @touchstart.native.stop="numberKeyboardShow = true"
                 label="身份证号"
                 placeholder="请输入身份证号"
                 required
-                maxlength="18"
-                @input="changeFn"
             />
         </van-cell-group>
         <div style="padding: 20px;">
@@ -29,6 +29,14 @@
               确认身份信息
           </van-button>
         </div>
+        <van-number-keyboard
+            v-model="idNumber"
+            :show="numberKeyboardShow"
+            extra-key="X"
+            :maxlength="18"
+            @input="changeFn"
+            @blur="numberKeyboardShow = false"
+        />
     </div>
 </template>
 
@@ -38,22 +46,27 @@ import {
     Field, 
     Divider, 
     Button, 
+    NumberKeyboard,
     // Icon, 
 } from 'vant'
+
 import {mapActions} from 'vuex'
+
 export default {
     name: 'confrimId',
     data(){
         return {
             name: '',
-            idNumber: '',
             btnDisable: true,
+            idNumber: '',
+            numberKeyboardShow: false,
         }
     },
     components: {
         [Button.name]: Button,
         [CellGroup.name]:CellGroup, 
         [Field.name]: Field, 
+        [NumberKeyboard.name]: NumberKeyboard,
         [Divider.name]: Divider,
     },
     mounted(){

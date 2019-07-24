@@ -48,6 +48,6 @@ export default new Vuex.Store({
         commit('setLoanApplyInfoById', result.data)
       }
       return result
-    }
+    },
   }
 })

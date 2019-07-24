@@ -146,27 +146,18 @@ export default {
         this.loanApplyId = this.getLoanApplyId();
         if(this.loanApplyId){
             this.fetchData()
-            this.getMarryInfo()
         }else{
             this.getCurLoanApply().then(res => {
                 this.loanApplyId = res.data.loanApply.id
                 this.fetchData()
-                this.getMarryInfo()
             });
-        }
+        }        
         // this.$axios.delete(`/borrow/loan/${this.loanApplyId}/file/58`)
     },
     methods: {
         ...mapMutations(['setLoanApplyInfoDoc']),
         ...mapGetters(['getLoanApplyId']),
         ...mapActions(['getCurLoanApply']),
-        getMarryInfo(){
-            this.$axios.get(`/borrow/loan/${this.loanApplyId}/personal`).then(res => {
-                if(res.data.maritalStatus == 'MARRIED'){
-                    this.marryFlag = true
-                }
-            })
-        },
         makeData(arr){
             arr.forEach(item => {
                 let file = { url: '',id: item.id }
@@ -185,8 +176,7 @@ export default {
                         break;
                     case 'NEARLY_6_MONTHLY_INCOME':
                         this.incomeRegister.push(file)
-                        break;
-                        
+                        break;     
                 }
             })
         },

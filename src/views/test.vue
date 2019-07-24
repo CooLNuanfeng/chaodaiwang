@@ -1,39 +1,53 @@
 <template>
     <div class="page-warp">
-        <div class="app-title">上传户⼝簿(最多上传3张)</div>
-        <div class="upload-small">
-            
-            <van-uploader 
-                multiple
-                :preview-image="false"
-                v-model="famliyRegister"
-                name="famliyregister"
-                result-type="text"
+        <van-cell-group>
+            <van-field
+                :value="idNumber"
+                readonly
+                clickable
+                @touchstart.native.stop="numberKeyboardShow = true"
+                label="身份证号"
+                placeholder="请输入身份证号"
+                required
             />
-        </div>
+            <van-number-keyboard
+                v-model="idNumber"
+                :show="numberKeyboardShow"
+                extra-key="X"
+                :maxlength="18"
+                @input="changeFn"
+                @blur="numberKeyboardShow = false"
+            />
+        </van-cell-group>
     </div>
 </template>
 
 <script>
 import { 
-    Uploader,
-    Button,  
+    CellGroup, 
+    Field, 
+    NumberKeyboard, 
 } from 'vant'
 
 export default {
     name: 'test',
     data(){
         return {
-            maxCount: 3,
-            maxSize: 1024 * 1024,
-            famliyRegister: [],
-            btnDisable: false,
+            idNumber: '',
+            numberKeyboardShow: false,
         }
     },
     components: {
-        [Uploader.name]: Uploader,
-        [Button.name]: Button,
+        [CellGroup.name]:CellGroup, 
+        [Field.name]: Field, 
+        [NumberKeyboard.name]: NumberKeyboard,
     },
+    methods: {
+        changeFn(){
+            console.log('change');
+            
+        }
+    }
 }
 </script>
 

@@ -2,36 +2,42 @@
     <div class="page-warp">
         <div class="app-title">上传身份证正面</div>
         <div class="upload-style">
+            <div v-if="cardFront.length">
+                <div class="upload-img" v-for="item in cardFront" :key="item.id" :data-id="item.id" @click="previewFn(item.id)">点击查看<van-icon name="delete" size="20" color="#fff" @click.stop="delFn(item.id, 'cardfront')"/></div>
+            </div>
             <van-uploader 
-                v-model="cardFront[0].file"
+                :multiple="false"
+                v-model="cardFront"
+                name="cardfront"
+                :preview-image="false"
+                :max-size="maxSize"
+                :max-count="maxCount"
                 :before-read="beforeRead" 
                 :after-read="afterRead"
-                name="front"
-                :max-size="1024 * 1024 * 10"
-                @delete="delFn('front',cardFront[0].id)"
+                @delete="delFn"
+                upload-text="上传身份证正面"
                 @oversize="oversizeFn"
-            >
-                <div class="upload-flex">
-                    <van-icon name="plus" />身份证正面
-                </div>
-            </van-uploader>
+            />
         </div>
         
         <div class="app-title">上传身份证反面</div>
         <div class="upload-style">
+            <div v-if="cardBack.length">
+                <div class="upload-img" v-for="item in cardBack" :key="item.id" :data-id="item.id" @click="previewFn(item.id)">点击查看<van-icon name="delete" size="20" color="#fff" @click.stop="delFn(item.id, 'cardback')"/></div>
+            </div>
             <van-uploader 
-                v-model="cardBack[0].file"
+                :multiple="false"
+                v-model="cardBack"
+                name="cardback"
+                :preview-image="false"
+                :max-size="maxSize"
+                :max-count="maxCount"
                 :before-read="beforeRead" 
                 :after-read="afterRead"
-                name="back"
-                :max-size="1024 * 1024 * 10"
-                @delete="delFn('back',cardBack[0].id)"
+                upload-text="上传身份证反面"
+                @delete="delFn"
                 @oversize="oversizeFn"
-            >
-                <div class="upload-flex">
-                    <van-icon name="plus" />身份证反面
-                </div>
-            </van-uploader>
+            />
         </div>
         <div style="padding: 20px;">
             <van-button 
@@ -43,6 +49,11 @@
                 保存
             </van-button>
         </div>
+        <van-popup
+            v-model="popShow"
+        >
+            <img :src="previewImgDataUrl" alt="" style="width:100%">
+        </van-popup>
     </div>
 </template>
 
@@ -51,7 +62,8 @@ import {
     Uploader, 
     Button, 
     Toast, 
-    Icon, 
+    Icon,
+    Popup,
 } from 'vant'
 
 import {mapActions} from 'vuex'
@@ -60,35 +72,66 @@ export default {
     name: 'uploadCard',
     data(){
         return{
-            cardFront: [{}],
-            cardBack: [{}],
+            maxSize: 1024 * 1024 * 10,
+            maxCount: 1,
+            cardFront: [],
+            cardBack: [],
             btnDisable: true,
-            currentName: ''
+            popShow: false,
+            previewImgDataUrl: ''
         }
     },
     components: {
         [Uploader.name]: Uploader,
         [Icon.name]: Icon,
         [Button.name]: Button,
+        [Popup.name]: Popup,
     },
     mounted(){
-        // this.$axios.delete(`/borrow/file/46`)
+        this.$axios.get(`/borrow/file`).then(res => {
+            if(res.data){
+                this.makeData(res.data)
+            }
+        })
     },
     methods: {
         ...mapActions(['getCurLoanApply']),
-        delFn(name,id){
-            this.$axios.delete(`/borrow/file/${id}`).then(() => {
-                if(name == 'front'){
-                    this.cardFront = [{}]
+        makeData(arr){
+            arr.forEach(item => {
+                let file = { url: '',id: item.id }
+                switch(item.type){
+                    case 'ID_CARD_FRONT':
+                        this.cardFront.push(file)
+                        break;
+                    case 'ID_CARD_BACK':
+                        this.cardBack.push(file)
+                        break;    
                 }
-                if(name == 'back'){
-                    this.cardBack = [{}]
+            })
+            this.changeFn()
+        },
+        previewFn(id){
+            this.$axios.get(`/borrow/file/${id}`).then(res => {
+                // console.log(res);
+                this.previewImgDataUrl = 'data:image/png;base64,'+res.data
+                this.popShow = true 
+            })
+        },
+        delFn(id,name){
+            console.log(id,name);
+            
+            this.$axios.delete(`/borrow/file/${id}`).then(() => {
+                if(name == 'cardfront'){
+                    this.cardFront = []
+                }
+                if(name == 'cardback'){
+                    this.cardBack = []
                 }
                 this.changeFn()
             })
         },
         changeFn(){
-            if(this.cardFront[0].id && this.cardBack[0].id){
+            if(this.cardFront.length && this.cardBack.length){
                 this.btnDisable = false
             }else{
                 this.btnDisable = true
@@ -105,35 +148,30 @@ export default {
         },
         afterRead(file,obj) {
             // console.log(file,obj);
-            this.currentName = obj.name
-            if(obj.name == 'front'){
-                this.cardFront.push({file})
+            if(obj.name == 'cardfront'){
+                // this.cardFront.push(file)
                 this.uploadCard('ID_CARD_FRONT', file)
             }
-            if(obj.name == 'back'){
-                this.cardBack.push({file})
+            if(obj.name == 'cardback'){
+                // this.cardBack.push(file)
                 this.uploadCard('ID_CARD_BACK', file)
             }
         },
         oversizeFn(){
-            Toast('图片尺寸不能超过1M');
+            Toast('图片尺寸不能超过10M');
         },
         uploadCard(type, file){
-            // console.log(type, file);
+            console.log(type, file);
             var formData = new FormData();
             // 将文件转二进制
             formData.append('file', file.file);
             this.$axios.post(`/borrow/file/${type}`,formData,{
                 headers: { 'content-type': 'application/form-data' }
             }).then(res => {
+                console.log(res)
                 if(res.data){
                     Toast.success('上传成功');
-                    if(this.currentName == 'front'){
-                       this.cardFront[0].id = res.data
-                    }
-                    if(this.currentName == 'back'){
-                       this.cardBack[0].id = res.data
-                    }
+                    file.id = res.data
                 }
                 this.changeFn()
             })

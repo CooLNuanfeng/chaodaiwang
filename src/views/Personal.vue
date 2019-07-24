@@ -286,8 +286,8 @@ export default {
             }).then(res=>{
                 // console.log(res);
                 if(res.data){
-                    this.$router.replace('/infoList')
                     this.setLoanApplyInfoPersonal(true)
+                    this.$router.replace('/infoList')
                 }
             })
         },
