@@ -66,7 +66,7 @@ export default {
     },
     methods: {
         changeFn(){
-            console.log('change');
+            // console.log('change');
             
         }
     }

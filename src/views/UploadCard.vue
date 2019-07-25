@@ -124,7 +124,7 @@ export default {
             })
         },
         delFn(id,name){
-            console.log(id,name);
+            // console.log(id,name);
             
             this.$axios.delete(`/borrow/file/${id}`).then(() => {
                 if(name == 'cardfront'){
@@ -167,14 +167,14 @@ export default {
             Toast('图片尺寸不能超过10M');
         },
         uploadCard(type, file){
-            console.log(type, file);
+            // console.log(type, file);
             var formData = new FormData();
             // 将文件转二进制
             formData.append('file', file.file);
             this.$axios.post(`/borrow/file/${type}`,formData,{
                 headers: { 'content-type': 'application/form-data' }
             }).then(res => {
-                console.log(res)
+                // console.log(res)
                 if(res.data){
                     Toast.success('上传成功');
                     file.id = res.data
