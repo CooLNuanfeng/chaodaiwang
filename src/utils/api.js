@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { Toast } from 'vant';
+import router from '../router'
 
 if(process.env.NODE_ENV == 'production'){
   axios.defaults.baseURL = 'http://47.105.50.132:8080'
@@ -31,6 +32,7 @@ axios.interceptors.response.use(function (response) {
       Toast.fail(errRestult.errorMsg)
     }else if(errRestult.errorKey === "NEED_LOG"){
       Toast.fail('登陆超时，请重新登陆！')
+      router.push('/login')
     }else{
       return Promise.reject(error);
     }

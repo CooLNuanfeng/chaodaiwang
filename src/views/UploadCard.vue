@@ -51,8 +51,8 @@
         </div>
         <van-popup
             v-model="popShow"
-        >
-            <img :src="previewImgDataUrl" alt="" style="width:100%">
+        >   <van-loading  v-show="loading"/>
+            <img v-show="previewImgDataUrl" :src="previewImgDataUrl" alt="" style="width:100%">
         </van-popup>
     </div>
 </template>
@@ -63,6 +63,7 @@ import {
     Button, 
     Toast, 
     Icon,
+    Loading,
     Popup,
 } from 'vant'
 
@@ -78,7 +79,8 @@ export default {
             cardBack: [],
             btnDisable: true,
             popShow: false,
-            previewImgDataUrl: ''
+            previewImgDataUrl: '',
+            loading: true
         }
     },
     components: {
@@ -86,6 +88,7 @@ export default {
         [Icon.name]: Icon,
         [Button.name]: Button,
         [Popup.name]: Popup,
+        [Loading.name]: Loading,
     },
     mounted(){
         this.$axios.get(`/borrow/file`).then(res => {
@@ -111,10 +114,13 @@ export default {
             this.changeFn()
         },
         previewFn(id){
+            this.popShow = true 
+            this.loading = true
+            this.previewImgDataUrl = ''
             this.$axios.get(`/borrow/file/${id}`).then(res => {
                 // console.log(res);
                 this.previewImgDataUrl = 'data:image/png;base64,'+res.data
-                this.popShow = true 
+                this.loading = false
             })
         },
         delFn(id,name){
