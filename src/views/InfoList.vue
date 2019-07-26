@@ -1,6 +1,6 @@
 <template>
     <div class="page-warp">
-        <van-grid :column-num="2">
+        <van-grid :column-num="3">
             <van-grid-item to="/personal">
                 <div class="info-box">
                     <p>个人信息</p>
@@ -22,6 +22,8 @@
                     <van-icon v-else size="40" name="warning-o" color="#f44"/>
                 </div>
             </van-grid-item>
+        </van-grid>
+        <van-grid :column-num="2">
             <van-grid-item to="/docUpload">
                 <div class="info-box">
                     <p>影像件</p>
@@ -29,13 +31,13 @@
                     <van-icon v-else size="40" name="warning-o" color="#f44"/>
                 </div>
             </van-grid-item>
-            <!-- <van-grid-item>
+            <van-grid-item to="/assetsUpload">
                 <div class="info-box">
-                    <p>三方授权</p>
-                    <van-icon size="40" name="passed" color="#07c160"/>
-                    <van-icon size="40" name="warning-o" color="#f44"/>
+                    <p>授信资产</p>
+                    <van-icon v-if="assetIsFlag" size="40" name="passed" color="#07c160"/>
+                    <van-icon v-else size="40" name="warning-o" color="#f44"/>
                 </div>
-            </van-grid-item> -->
+            </van-grid-item>
         </van-grid>
         <div style="padding: 20px;">
             <van-button 
@@ -62,6 +64,7 @@ export default {
             concatFlag: false,
             jobInfoFlag: false,
             docInfoFlag: false,
+            assetIsFlag: false,
             btnDisable: true,
         }
     },
@@ -93,10 +96,11 @@ export default {
             this.concatFlag = data.contactInfoIsComplated
             this.jobInfoFlag = data.jobInfoIsComplated
             this.docInfoFlag = data.documentIsComplated
+            this.assetIsFlag = data.assetIsComplated
             this.buttonStatus()
         },
         buttonStatus(){
-            if(this.personalFlag && this.concatFlag && this.jobInfoFlag && this.docInfoFlag){
+            if(this.personalFlag && this.concatFlag && this.jobInfoFlag && this.docInfoFlag && this.assetIsFlag){
                 this.btnDisable = false
             }else{
                 this.btnDisable = true

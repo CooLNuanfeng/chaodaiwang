@@ -126,13 +126,13 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "docUpload" */ './views/DocUpload.vue')
     },
     {
-      path: '/test',
-      name: 'test',
+      path: '/assetsUpload',
+      name: 'assetsUpload',
       meta: {
-        title: '影像件',
+        title: '授信资产',
         backText: '返回'
       },
-      component: () => import(/* webpackChunkName: "test" */ './views/test.vue')
+      component: () => import(/* webpackChunkName: "assetsUpload" */ './views/AssetsUpload.vue')
     },
   ]
 })

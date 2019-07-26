@@ -38,6 +38,7 @@ export default new Vuex.Store({
     setLoanApplyInfoJob: (state, flag) => state.loanApplyInfo.jobInfoIsComplated = flag,
     setLoanApplyInfoContact: (state, flag) => state.loanApplyInfo.contactInfoIsComplated = flag,
     setLoanApplyInfoDoc: (state, flag) => state.loanApplyInfo.documentIsComplated = flag,
+    setLoanApplyInfoAssets: (state, flag) => state.loanApplyInfo.assetIsComplated = flag
   },
   actions: {
     getCurLoanApply: async ({commit})=>{
