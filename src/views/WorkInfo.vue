@@ -9,12 +9,12 @@
             @input="changFn"
         />
         <van-field
+            readonly
             required
-            type="number"
             label="发薪日期"
             v-model="salaryDay"
-            placeholder="请输入发薪日期"
-            @input="changFn"
+            placeholder="请选择发薪日期"
+            @click="salaryDayFn"
         />
         <van-field
             readonly
@@ -108,6 +108,7 @@ export default {
         return {
             loanApplyId: '',
             salary: '', //月收入
+            salarykey: '',
             salaryDay: '', //发薪日期
             job: '', //职业
             jobkey: '', //职业key
@@ -147,7 +148,8 @@ export default {
         ...mapActions(['getCurLoanApply']),
         makeData(data){
             this.salary = data.monthlyIncome
-            this.salaryDay = data.incomePayDate.substring(0,data.incomePayDate.length-1)
+            this.salarykey = data.incomePayDate.substring(0,data.incomePayDate.length-1)
+            this.salaryDay = data.incomePayDate
             this.job = jobMap[data.occupation]
             this.jobkey = data.occupation
             this.companyName = data.companyName
@@ -162,6 +164,17 @@ export default {
                     this.makeData(res.data)
                 }    
             })
+        },
+        salaryDayFn(){
+            this.curPick = 'salary'
+            this.columns = []
+            for(let i=1; i<32; i++){
+                this.columns.push({
+                    key: i,
+                    text: i + '号'
+                })
+            }
+            this.showPicker = true
         },
         jobFn(){
             this.curPick = 'job'
@@ -187,6 +200,10 @@ export default {
                     this.jobkey = item.key
                     this.job = item.text
                     break;
+                case 'salary':
+                    this.salarykey = item.key
+                    this.salaryDay = item.text
+                    break;
             }
             this.showPicker = false;
             this.changFn()
@@ -206,7 +223,7 @@ export default {
 
             this.$axios.post(`/borrow/loan/${this.loanApplyId}/job`,{
                 "monthlyIncome": this.salary,//月收入
-                "incomePayDate": this.salaryDay + "号",//发薪日
+                "incomePayDate": this.salaryDay,//发薪日
                 "occupation": this.jobkey,
                 "companyName": this.companyName,//单位名称
                 "companyCategory": this.companyType,//单位性质
