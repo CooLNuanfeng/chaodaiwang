@@ -256,7 +256,7 @@ export default {
             this.changFn()
         },
         changFn(){
-            if(!this.address || !this.province || !this.city || !this.eduStatus || !this.wedding){
+            if(!this.address || !this.province || !this.city || !this.eduStatus || !this.weddingStatus || !this.childrenStatus){
                 this.btnDisable = true
             }else if(this.mateFlag){
                 if(!this.mateName || !this.matePhone){

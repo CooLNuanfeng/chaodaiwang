@@ -325,8 +325,8 @@ const houseTypeMap = {
 }
 
 const boolenMap = {
-    'true': '是',
-    'false': '否',
+    'YES': '是',
+    'NO': '否',
 }
 
 const houseOrientationMap = {
@@ -454,12 +454,12 @@ export default {
             this.houseType = houseTypeMap[data.layout]
             this.floor = data.floor
             this.allFloor = data.totalFloor
-            this.baseMentKey = data.isBasement
-            this.baseMent = boolenMap[data.isBasement]
+            this.baseMentKey = data.isBasement ? 'YES': 'NO'
+            this.baseMent = boolenMap[this.baseMentKey]
             this.houseOrientationKey = data.orientation
             this.houseOrientation = houseOrientationMap[data.orientation]
-            this.residentKey = data.isResident
-            this.resident = boolenMap[data.isResident]
+            this.residentKey = data.isResident ? 'YES': 'NO'
+            this.resident = boolenMap[this.residentKey]
             this.useStatusKey = data.useStatus
             this.useStatus = useStatusMap[data.useStatus]
             this.imOneName = data.intermediaryOneName
@@ -540,8 +540,8 @@ export default {
         baseMentFn(){
             this.curPick = 'baseMent'
             this.columns = [
-                {'key': 'true', 'text':'是'},
-                {'key': 'false', 'text':'否'},
+                {'key': 'YES', 'text':'是'},
+                {'key': 'NO', 'text':'否'},
             ];
             this.showPicker = true
         },
@@ -562,8 +562,8 @@ export default {
         residentFn(){
             this.curPick = 'resident'
             this.columns = [
-                {'key': 'true', 'text':'是'},
-                {'key': 'false', 'text':'否'},
+                {'key': 'YES', 'text':'是'},
+                {'key': 'NO', 'text':'否'},
             ];
             this.showPicker = true
         },
@@ -617,9 +617,9 @@ export default {
                 "layout": this.houseTypeKey,
                 "floor": this.floor,
                 "totalFloor": this.allFloor,
-                "isBasement": this.baseMentKey,
+                "isBasement": this.baseMentKey == 'YES' ? true : false,
                 "orientation": this.houseOrientationKey,
-                "isResident": this.residentKey,
+                "isResident": this.residentKey == 'YES' ? true : false,
                 "useStatus": this.useStatusKey,
                 "intermediaryOneName": this.imOneName,
                 "intermediaryOnePhone": this.imOnePhone,
