@@ -51,6 +51,7 @@
                 @input="changeFn"
             />
             <van-field
+                required
                 v-model="code"
                 label="推荐码"
                 placeholder="请入推荐码"
@@ -123,7 +124,7 @@ export default {
     methods: {
         ...mapMutations(['setLoanApplyId']),
         changeFn(){
-            if(!this.money || !this.term || !this.rePaymentFn || !this.useMsg || !this.rePayOrigin){
+            if(!this.money || !this.term || !this.rePaymentFn || !this.useMsg || !this.rePayOrigin || !this.code){
                 this.btnDisable = true
             }else{
                 this.btnDisable = false

@@ -58,7 +58,7 @@
                 已有账号, 去 <router-link to="/login">登录</router-link>
             </div>
         </div>
-        <van-divider dashed :style="{ borderColor: '#ddd', padding: '0 20px' }">{{getAppName}}</van-divider>
+        <!-- <van-divider dashed :style="{ borderColor: '#ddd', padding: '0 20px' }">{{getAppName}}</van-divider> -->
     </div>
 </template>
 
