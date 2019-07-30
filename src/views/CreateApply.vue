@@ -55,11 +55,12 @@
                 v-model="code"
                 label="推荐码"
                 placeholder="请入推荐码"
+                @input="changeFn"
             />
         </van-cell-group>
 
         <div style="padding: 20px;">
-            <van-button 
+            <van-button
                 :disabled="btnDisable"
                 :block="true"
                 type="info"
@@ -81,14 +82,14 @@
 </template>
 
 <script>
-import { 
-    CellGroup, 
-    Field, 
-    Divider, 
-    Button, 
+import {
+    CellGroup,
+    Field,
+    Divider,
+    Button,
     Picker,
     Popup,
-    Toast, 
+    Toast,
     Icon,
 } from 'vant';
 
